@@ -2,8 +2,8 @@ import Blog from "../components/Blog/Blog";
 import TourGuide from "../components/TourGuide/TourGuide";
 import TravelPlanner from "../components/TravelPlanner/TravelPlanner";
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
-import Login from "../layouts/components/AuthLayout/Login/Login";
-import Register from "../layouts/components/AuthLayout/Register/Register";
+import Login from "../layouts/AuthLayout/Login/Login";
+import Register from "../layouts/AuthLayout/Register/Register";
 
 const publicRoutes = [
   {
