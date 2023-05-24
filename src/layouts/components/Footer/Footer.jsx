@@ -1,5 +1,8 @@
 import React from "react";
 import Logo from "../../../assets/logo.png";
+import Facebook from "../../../assets/Facebook.png";
+import Instagram from "../../../assets/Instagram.png";
+import Twitter from "../../../assets/Twitter.png";
 import "./Footer.scss";
 
 const Footer = () => {
@@ -88,7 +91,16 @@ const Footer = () => {
           </div>
         ))}
       </div>
-      <div className="footer__lower"></div>
+      <div className="footer__lower">
+        <p href="" className="footer__lower-copyright">
+          2022-2023 Guidi. All Rights Reserved
+        </p>
+        <div className="footer__lower-socials">
+          <img src={Facebook} alt="" />
+          <img src={Twitter} alt="" />
+          <img src={Instagram} alt="" />
+        </div>
+      </div>
     </div>
   );
 };
