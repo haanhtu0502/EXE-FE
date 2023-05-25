@@ -1,11 +1,12 @@
 import React from "react";
+import logo from "../../../assets/logo.png";
 
 const Register = () => {
   return (
     <div>
       <div className="login-content_container">
         <div className="left_content">
-          <div className="title">GUIDI</div>
+          <img className="left_content-logo" src={logo} alt="" />
           <p>
             Tìm kiếm niềm vui và khám phá những điều mới lạ mà bạn <br />
             chưa từng được trải nghiệm
