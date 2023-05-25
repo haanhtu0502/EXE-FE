@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Header.scss";
 import Logo from "../../../assets/logo.png";
 import Search from "../Search/Search";
@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MenuIcon from "../../../assets/menu.png";
 import UserIcon from "../../../assets/user.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Button, Fade, Menu, MenuItem } from "@mui/material";
 
 const Header = () => {
   const headerNav = [
@@ -14,7 +15,22 @@ const Header = () => {
     { name: "Travel", to: "/planner" },
   ];
 
+  const headerMenu = [
+    { display: "Đăng nhập", to: "/login" },
+    { display: "Đăng ký", to: "/register" },
+    { display: "Trợ giúp", to: "/" },
+  ];
+
   const { pathname } = useLocation();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const active = headerNav.findIndex((e) => e.path === pathname);
 
@@ -38,7 +54,7 @@ const Header = () => {
         </nav>
         <div className="header__nav-feature">
           <Search />
-          <div className="header__nav-feature-icon">
+          {/* <div className="header__nav-feature-icon">
             <img
               className="header__nav-feature-icon-menu"
               src={MenuIcon}
@@ -49,7 +65,43 @@ const Header = () => {
               src={UserIcon}
               alt="Logo"
             />
-          </div>
+          </div> */}
+          <Button
+            className="header__nav-feature-icon"
+            id="basic-button"
+            aria-controls={open ? "basic-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+          >
+            <img
+              className="header__nav-feature-icon-menu"
+              src={MenuIcon}
+              alt="Logo"
+            />
+            <img
+              className="header__nav-feature-icon-user"
+              src={UserIcon}
+              alt="Logo"
+            />
+          </Button>
+          <Menu
+            id="basic-menu"
+            className="header__menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+            TransitionComponent={Fade}
+          >
+            {headerMenu.map((item) => (
+              <MenuItem>
+                <Link to={item.to}>{item.display}</Link>{" "}
+              </MenuItem>
+            ))}
+          </Menu>
         </div>
       </div>
       <div className="header__content">

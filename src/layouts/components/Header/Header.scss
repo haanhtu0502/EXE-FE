@@ -33,6 +33,12 @@
       display: flex;
       align-items: center;
       gap: 2.5rem;
+      position: relative;
+
+      .css-1e6y48t-MuiButtonBase-root-MuiButton-root:hover {
+        opacity: 0.8 !important;
+        background-color: white !important;
+      }
 
       &-icon {
         background: #ffffff;
@@ -44,10 +50,6 @@
         gap: 2rem;
         padding: 14px;
         cursor: pointer;
-
-        &:hover {
-          opacity: 0.8;
-        }
 
         &-menu {
           width: 2rem;
@@ -146,5 +148,16 @@
         }
       }
     }
+  }
+}
+
+.header__menu {
+  .css-1ka5eyc-MuiPaper-root-MuiMenu-paper-MuiPopover-paper {
+    top: 80px !important;
+    right: 35px;
+  }
+
+  a {
+    color: #000;
   }
 }
