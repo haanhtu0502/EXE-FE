@@ -1,0 +1,19 @@
+.content__container {
+  margin-left: 6rem;
+  margin-right: 6rem;
+  margin-top: 4rem;
+  margin-bottom: 3rem;
+}
+
+.content__flex {
+  margin-top: 7rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+
+  .content__flex-left {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+}

@@ -4,15 +4,16 @@ import TravelPlanner from "../components/TravelPlanner/TravelPlanner";
 import DefaultLayout from "../layouts/DefaultLayout/DefaultLayout";
 import Login from "../layouts/AuthLayout/Login/Login";
 import Register from "../layouts/AuthLayout/Register/Register";
-import Home from "../components/Home/Home";
+import PlanContent from "../components/PlanContent/PlanContent";
 
 const publicRoutes = [
   {
     path: "/",
-    component: Home,
+    component: TravelPlanner,
     layout: DefaultLayout,
   },
   { path: "/planner", component: TravelPlanner, layout: DefaultLayout },
+  { path: "/planner/plan", component: PlanContent, PlanContent: DefaultLayout },
   { path: "/blog", component: Blog, layout: DefaultLayout },
   { path: "/tourguide", component: TourGuide, layout: DefaultLayout },
   { path: "/login", component: Login, layout: null },

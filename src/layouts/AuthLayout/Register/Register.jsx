@@ -41,7 +41,7 @@ const Register = () => {
             <br />
             <input
               className="right_content-input"
-              type="text"
+              type="password"
               placeholder="Xác nhận mật khẩu"
             />
             <br />
