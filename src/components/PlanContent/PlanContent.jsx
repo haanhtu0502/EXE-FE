@@ -20,10 +20,12 @@ const PlanContent = () => {
           <div className="content__price">Price</div>
           <button className="content__button">Chuyến đi của bạn</button>
         </div>
-        {type === "flight" ? <Flight result={result} /> : <></>}
-        {type === "hotel" ? <Hotel result={result} /> : <></>}
-        {type === "tourist" ? <TouristSpot result={result} /> : <></>}
-        {type === "service" ? <Service result={result} /> : <></>}
+        <div className="content__flex-right">
+          {type === "flight" ? <Flight result={result} /> : <></>}
+          {type === "hotel" ? <Hotel result={result} /> : <></>}
+          {type === "tourist" ? <TouristSpot result={result} /> : <></>}
+          {type === "service" ? <Service result={result} /> : <></>}
+        </div>
       </div>
     </div>
   );
