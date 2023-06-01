@@ -13,10 +13,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
 import { Autocomplete, Box, TextField } from "@mui/material";
+import { format } from "date-fns";
 
 const PlanContent = () => {
   const [type, setType] = useState("flight");
   const [result, setResult] = useState([]);
+
+  const [dates, setDates] = useState([
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      key: "selection",
+    },
+  ]);
 
   const formik = useFormik({
     initialValues: {
@@ -97,37 +106,45 @@ const PlanContent = () => {
                   <TextField
                     className="content__search-input-location"
                     {...params}
-                    label="Location"
                   />
                 )}
               />
-              {/* <label htmlFor="" className="content__search-label">
-                Ngày đi/ Ngày đến
-              </label> */}
+              <label className="content__search-label" htmlFor="location">
+                Ngày đi/ Ngày đến:
+              </label>
+              <div
+                className={`travelplanner__container-form-inputcontrol-text `}
+                style={{ width: "100%" }}
+              >{`${format(dates[0].startDate, "MM/dd/yyyy")} to ${format(
+                dates[0].endDate,
+                "MM/dd/yyyy"
+              )}`}</div>
               <div className="content__search-price">
                 <label htmlFor="minPrice" className="content__search-label">
                   Giá thấp nhất:
                 </label>
                 <input
+                  value={formik.values.minPrice}
+                  onChange={formik.handleChange}
                   placeholder="(VNĐ)"
                   type="number"
                   name="minPrice"
                   className="content__search-label-price"
                 />
               </div>
-
               <div className="content__search-price">
                 <label htmlFor="maxPrice" className="content__search-label">
                   Giá cao nhất:
                 </label>
                 <input
+                  value={formik.values.maxPrice}
+                  onChange={formik.handleChange}
                   placeholder="(VNĐ)"
                   type="number"
                   name="maxPrice"
                   className="content__search-label-price"
                 />
               </div>
-
               <button className="content__search-button" type="submit">
                 Tìm kiếm
               </button>

@@ -2,7 +2,7 @@
   margin-left: 6rem;
   margin-right: 6rem;
   margin-top: 4rem;
-  margin-bottom: 3rem;
+  margin-bottom: 9rem;
 
   .content__price {
     border: 2px solid #000000;
@@ -54,6 +54,7 @@
       flex-direction: column;
       gap: 0.75rem;
       width: 120px;
+      cursor: pointer;
 
       &:hover {
         background-color: #000000;
