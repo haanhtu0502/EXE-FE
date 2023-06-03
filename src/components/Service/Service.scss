@@ -1,0 +1,54 @@
+.service__container {
+  border: 1px solid gray;
+  font-size: 18px;
+
+  .service__header {
+    background-color: black;
+    height: 4.5rem;
+    display: flex;
+    align-items: center;
+
+    .service__header-icon {
+      color: white;
+      margin-left: 2rem;
+    }
+  }
+
+  .service__body {
+    display: flex;
+    margin: 2rem;
+
+    .service__body-right {
+      width: 80%;
+      margin-left: 2rem;
+    }
+  }
+
+  .service__detail-button {
+    margin: 0 2rem 2rem 0;
+    display: flex;
+    justify-content: flex-end;
+
+    .service__add-button {
+      background-color: black;
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .service__add-button:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .service__price {
+    display: flex;
+    justify-content: flex-end;
+
+    h4 {
+      margin: 0 2rem 1rem 0;
+    }
+  }
+}

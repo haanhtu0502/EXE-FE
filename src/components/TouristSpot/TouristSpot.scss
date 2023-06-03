@@ -1,0 +1,44 @@
+.tourist__container {
+  border: 1px solid gray;
+  font-size: 18px;
+
+  .tourist__header {
+    background-color: black;
+    height: 4.5rem;
+    display: flex;
+    align-items: center;
+
+    .tourist__header-icon {
+      color: white;
+      margin-left: 2rem;
+    }
+  }
+
+  .tourist__body {
+    display: flex;
+    margin: 2rem;
+
+    .tourist__body-right {
+      width: 80%;
+      margin-left: 2rem;
+    }
+  }
+
+  .tourist__detail-button {
+    margin: 0 2rem 2rem 0;
+    display: flex;
+    justify-content: flex-end;
+    button {
+      background-color: black;
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+  }
+}

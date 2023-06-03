@@ -186,10 +186,12 @@ const PlanContent = () => {
             Chuyến đi của bạn
           </button>
         </div>
-        {type === "flight" ? <Flight result={result} /> : <></>}
-        {type === "hotel" ? <Hotel result={result} /> : <></>}
-        {type === "tourist" ? <TouristSpot result={result} /> : <></>}
-        {type === "service" ? <Service result={result} /> : <></>}
+        <div className="content__flex-right">
+          {type === "flight" ? <Flight result={result} /> : <></>}
+          {type === "hotel" ? <Hotel result={result} /> : <></>}
+          {type === "tourist" ? <TouristSpot result={result} /> : <></>}
+          {type === "service" ? <Service result={result} /> : <></>}
+        </div>
       </div>
 
       <Modal
