@@ -1,13 +1,18 @@
 import React from "react";
 import "./Service.scss";
-import ServiceIcon from "../../assets/service.png";
 import LocationIcon from "../../assets/location.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHandsHolding } from "@fortawesome/free-solid-svg-icons";
 
 const Service = ({ result }) => {
   return (
     <div className="service__container">
       <div className="service__header">
-        <img src={ServiceIcon} alt="" />
+        <FontAwesomeIcon
+          icon={faHandsHolding}
+          size="lg"
+          className="service__header-icon"
+        />
       </div>
       <div className="service__body">
         <div className="service__body-left">

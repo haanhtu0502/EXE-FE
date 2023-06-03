@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Login.scss";
 import logo from "../../../assets/logo.png";
 import googleIcon from "../../../assets/Google.png";
@@ -62,9 +63,10 @@ const Login = () => {
               </div>
             </div>
             <div>
-              <a href="/register" className="right_content-links">
+              {/* <a href="/register" className="right_content-links"></a> */}
+              <Link to="/register" className="right_content-links">
                 —————————————— Tạo tài khoản mới ——————————————
-              </a>
+              </Link>
               <br />
               <p className="right_content-text">
                 Bằng cách đăng ký hoặc đăng nhập bạn đã hiểu và đồng ý với

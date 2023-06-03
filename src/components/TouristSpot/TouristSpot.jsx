@@ -1,12 +1,17 @@
 import React from "react";
 import "./TouristSpot.scss";
-import TouristSpotIcon from "../../assets/touristSplot.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 
 const TouristSpot = ({ result }) => {
   return (
     <div className="tourist__container">
       <div className="tourist__header">
-        <img src={TouristSpotIcon} alt="" />
+        <FontAwesomeIcon
+          icon={faBookOpen}
+          size="lg"
+          className="tourist__header-icon"
+        />
       </div>
       <div className="tourist__body">
         <div className="tourist__body-left">

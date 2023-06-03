@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 
 const Register = () => {
@@ -24,13 +25,19 @@ const Register = () => {
             <input
               className="right_content-input"
               type="text"
-              placeholder="Địa chỉ Email"
+              placeholder="Email"
             />
             <br />
             <input
               className="right_content-input"
               type="text"
               placeholder="Số điện thoại"
+            />
+            <br />
+            <input
+              className="right_content-input"
+              type="text"
+              placeholder="Địa chỉ"
             />
             <br />
             <input
@@ -49,9 +56,9 @@ const Register = () => {
             <br />
 
             <div>
-              <a href="/login" className="right_content-links">
+              <Link to="/login" className="right_content-links">
                 —————————————— Bạn đã có tài khoản ——————————————
-              </a>
+              </Link>
               <br />
               <p className="right_content-text">
                 Bằng cách đăng ký hoặc đăng nhập bạn đã hiểu và đồng ý với

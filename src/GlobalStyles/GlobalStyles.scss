@@ -27,3 +27,22 @@ ul {
 li {
   list-style: none;
 }
+
+.date-range {
+  position: relative;
+  .date {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 450px;
+  }
+}
+
+.blue-outline {
+  outline: none;
+  border: 2px solid #1976d2;
+
+  &:hover {
+    border: 2px solid #1976d2;
+  }
+}

@@ -4,11 +4,12 @@
 
   .service__header {
     background-color: black;
-    height: 5rem;
+    height: 4.5rem;
     display: flex;
     align-items: center;
 
-    img {
+    .service__header-icon {
+      color: white;
       margin-left: 2rem;
     }
   }
