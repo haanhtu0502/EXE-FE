@@ -7,8 +7,11 @@ import MenuIcon from "../../../assets/menu.png";
 import UserIcon from "../../../assets/user.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Fade, Menu, MenuItem } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../../feature/userSlice";
 
 const Header = () => {
+  const user = useSelector((state) => state.user.user);
   const headerNav = [
     { name: "Home", to: "/" },
     { name: "Tour Guide", to: "/tourguide" },
@@ -18,7 +21,14 @@ const Header = () => {
   const headerMenu = [
     { display: "Đăng nhập", to: "/login" },
     { display: "Đăng ký", to: "/register" },
-    { display: "Trợ giúp", to: "/" },
+    { display: "Trợ giúp", to: "/help" },
+  ];
+
+  const headerMenuLogined = [
+    { display: "Trang cá nhân", to: "/profile" },
+    { display: "Chuyến đi", to: "/history" },
+    { display: "Trợ giúp", to: "/help" },
+    { display: "Đăng xuất", to: "/" },
   ];
 
   const { pathname } = useLocation();
@@ -32,7 +42,17 @@ const Header = () => {
     setAnchorEl(null);
   };
 
+  const dispatch = useDispatch();
+
   const active = headerNav.findIndex((e) => e.path === pathname);
+
+  const handleLogout = () => {
+    localStorage.clear();
+
+    const action = logout();
+    dispatch(action);
+    setAnchorEl(null);
+  };
 
   const navigate = useNavigate();
 
@@ -96,11 +116,23 @@ const Header = () => {
             }}
             TransitionComponent={Fade}
           >
-            {headerMenu.map((item) => (
-              <MenuItem>
-                <Link to={item.to}>{item.display}</Link>{" "}
-              </MenuItem>
-            ))}
+            {user == null
+              ? headerMenu.map((item) => (
+                  <MenuItem>
+                    <Link to={item.to}>{item.display}</Link>{" "}
+                  </MenuItem>
+                ))
+              : headerMenuLogined.map((item) => {
+                  return item.display == "Đăng xuất" ? (
+                    <MenuItem>
+                      <Link onClick={handleLogout}>{item.display}</Link>{" "}
+                    </MenuItem>
+                  ) : (
+                    <MenuItem>
+                      <Link to={item.to}>{item.display}</Link>{" "}
+                    </MenuItem>
+                  );
+                })}
           </Menu>
         </div>
       </div>
@@ -114,20 +146,31 @@ const Header = () => {
             <br />
             Hãy tham gia cùng chúng tôi ngay để nhận được trải nghiệm tốt nhất
           </p>
-          <div className="header__content-half1-buttons">
-            <button
-              onClick={() => navigate("/register")}
-              className="header__content-half1-buttons-register"
-            >
-              Đăng ký
-            </button>
-            <button
-              onClick={() => navigate("/login")}
-              className="header__content-half1-buttons-login"
-            >
-              Đăng nhập
-            </button>
-          </div>
+          {user == null ? (
+            <div className="header__content-half1-buttons">
+              <button
+                onClick={() => navigate("/register")}
+                className="header__content-half1-buttons-register"
+              >
+                Đăng ký
+              </button>
+              <button
+                onClick={() => navigate("/login")}
+                className="header__content-half1-buttons-login"
+              >
+                Đăng nhập
+              </button>
+            </div>
+          ) : (
+            <div className="header__content-half1-buttons">
+              {/* <button
+                onClick={() => navigate("/register")}
+                className="header__content-half1-buttons-register"
+              >
+                Đăng xuất
+              </button> */}
+            </div>
+          )}
         </div>
         <div className="header__content-half2"></div>
       </div>

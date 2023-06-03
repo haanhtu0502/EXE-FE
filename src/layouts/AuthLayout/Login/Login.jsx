@@ -1,11 +1,58 @@
+<<<<<<< Updated upstream
 import React from "react";
 import { Link } from "react-router-dom";
+=======
+import React, { useState } from "react";
+>>>>>>> Stashed changes
 import "./Login.scss";
 import logo from "../../../assets/logo.png";
 import googleIcon from "../../../assets/Google.png";
 import fbIcon from "../../../assets/Facebook.png";
+import {
+  auth,
+  googleProvider,
+  facebookProvider,
+} from "../../../firebase/firebase.config";
+import { signInWithPopup } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { login } from "../../../feature/userSlice";
+import { useNavigate } from "react-router";
 
 const Login = () => {
+  const [user, setUser] = useState("");
+
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  const googleAuth = () => {
+    try {
+      signInWithPopup(auth, googleProvider).then((data) => {
+        const {
+          user: { providerData },
+        } = data;
+        const action = login(providerData[0]);
+        dispatch(action);
+        localStorage.setItem("user", JSON.stringify(providerData[0]));
+        navigate("/");
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const facebookAuth = () => {
+    signInWithPopup(auth, facebookProvider).then((data) => {
+      const {
+        user: { providerData },
+      } = data;
+      const action = login(providerData[0]);
+      dispatch(action);
+      localStorage.setItem("user", JSON.stringify(providerData[0]));
+      navigate("/");
+    });
+  };
+
   return (
     <div>
       <div className="login-content_container">
@@ -52,11 +99,11 @@ const Login = () => {
             </p>
             <div className="right_content-button">
               <div className="button-container">
-                <button>
+                <button onClick={googleAuth}>
                   <img src={googleIcon} alt="" className="icon-img" />
                   Đăng nhập với Google
                 </button>
-                <button>
+                <button onClick={facebookAuth}>
                   <img src={fbIcon} alt="" className="icon-img" />
                   Đăng nhập với Facebook
                 </button>
