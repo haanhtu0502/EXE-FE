@@ -12,13 +12,17 @@ import {
   faBookOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
-import { Autocomplete, Box, TextField } from "@mui/material";
+import { Autocomplete, Box, Fade, Modal, TextField } from "@mui/material";
 import { format } from "date-fns";
+import { useSelector } from "react-redux";
+import ModalPlanner from "../ModalPlanner/ModalPlanner";
 
 const PlanContent = () => {
   const [type, setType] = useState("flight");
   const [result, setResult] = useState([]);
-
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [dates, setDates] = useState([
     {
       startDate: new Date(),
@@ -27,7 +31,7 @@ const PlanContent = () => {
     },
   ]);
 
-  const formik = useFormik({
+  const flightFormik = useFormik({
     initialValues: {
       location: "Hà Nội",
       minPrice: "",
@@ -37,6 +41,22 @@ const PlanContent = () => {
       console.log(values);
     },
   });
+
+  useEffect(() => {
+    const fetchData = () => {
+      switch (type) {
+        case "flight":
+          console.log(type);
+        case "hotel":
+          console.log(type);
+        case "service":
+          console.log(type);
+        case "tourist":
+          console.log(type);
+      }
+    };
+    fetchData();
+  }, [type, flightFormik.values]);
 
   const filterNav = [
     {
@@ -63,8 +83,6 @@ const PlanContent = () => {
 
   const location = ["HCM", "Hà Nội", "Đà Nẵng"];
 
-  useEffect(() => {}, [type]);
-
   return (
     <div className="content__container">
       <div className="content__filter">
@@ -85,7 +103,7 @@ const PlanContent = () => {
       <div className="content__flex">
         <div className="content__flex-left">
           <div className="content__search">
-            <form action="" onSubmit={formik.handleSubmit}>
+            <form action="" onSubmit={flightFormik.handleSubmit}>
               <label className="content__search-label" htmlFor="location">
                 Điểm đến:
               </label>
@@ -95,11 +113,11 @@ const PlanContent = () => {
                 name="location"
                 options={location}
                 sx={{ width: "100%" }}
-                defaultValue={formik.values.location}
+                defaultValue={flightFormik.values.location}
                 onChange={(e, value) => {
-                  formik.setFieldValue(
+                  flightFormik.setFieldValue(
                     "location",
-                    value !== null ? value : formik.initialValues.location
+                    value !== null ? value : flightFormik.initialValues.location
                   );
                 }}
                 renderInput={(params) => (
@@ -115,17 +133,17 @@ const PlanContent = () => {
               <div
                 className={`travelplanner__container-form-inputcontrol-text `}
                 style={{ width: "100%" }}
-              >{`${format(dates[0].startDate, "MM/dd/yyyy")} to ${format(
+              >{`${format(dates[0].startDate, "dd/MM/yyyy")} to ${format(
                 dates[0].endDate,
-                "MM/dd/yyyy"
+                "dd/MM/yyyy"
               )}`}</div>
               <div className="content__search-price">
                 <label htmlFor="minPrice" className="content__search-label">
                   Giá thấp nhất:
                 </label>
                 <input
-                  value={formik.values.minPrice}
-                  onChange={formik.handleChange}
+                  value={flightFormik.values.minPrice}
+                  onChange={flightFormik.handleChange}
                   placeholder="(VNĐ)"
                   type="number"
                   name="minPrice"
@@ -137,8 +155,8 @@ const PlanContent = () => {
                   Giá cao nhất:
                 </label>
                 <input
-                  value={formik.values.maxPrice}
-                  onChange={formik.handleChange}
+                  value={flightFormik.values.maxPrice}
+                  onChange={flightFormik.handleChange}
                   placeholder="(VNĐ)"
                   type="number"
                   name="maxPrice"
@@ -164,13 +182,24 @@ const PlanContent = () => {
               <p>3.000.000</p>
             </div>
           </div>
-          <button className="content__button">Chuyến đi của bạn</button>
+          <button onClick={handleOpen} className="content__button">
+            Chuyến đi của bạn
+          </button>
         </div>
         {type === "flight" ? <Flight result={result} /> : <></>}
         {type === "hotel" ? <Hotel result={result} /> : <></>}
         {type === "tourist" ? <TouristSpot result={result} /> : <></>}
         {type === "service" ? <Service result={result} /> : <></>}
       </div>
+
+      <Modal
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        open={open}
+        onClose={handleClose}
+      >
+        <ModalPlanner handleClose={handleClose} />
+      </Modal>
     </div>
   );
 };

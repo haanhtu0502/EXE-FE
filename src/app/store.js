@@ -1,6 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
+import innetaryReducer from "../feature/innetarySlice";
 
-const rootReducer = {};
+const rootReducer = {
+  innetary: innetaryReducer,
+};
 
 const store = configureStore({
   reducer: rootReducer,

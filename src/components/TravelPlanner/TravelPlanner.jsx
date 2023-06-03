@@ -20,6 +20,8 @@ import { format } from "date-fns";
 import { useFormik } from "formik";
 import { Autocomplete, TextField } from "@mui/material";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { addInnetary } from "../../feature/innetarySlice";
 
 const TravelPlanner = () => {
   const [dates, setDates] = useState([
@@ -32,22 +34,26 @@ const TravelPlanner = () => {
 
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   const formik = useFormik({
     initialValues: {
       location: "",
-      dates: [
-        {
-          startDate: null,
-          endDate: null,
-          key: "selection",
-        },
-      ],
+      dates: {
+        startDate: null,
+        endDate: null,
+        key: "selection",
+      },
       name: "",
       number: "",
       budget: "",
     },
     onSubmit: (values) => {
-      console.log(values);
+      values.dates = values.dates.selection;
+      values.dates.startDate = format(values.dates.startDate, "MM/dd/yyyy");
+      values.dates.endDate = format(values.dates.endDate, "MM/dd/yyyy");
+      const action = addInnetary(values);
+      dispatch(action);
       navigate("/planner/plan");
     },
   });
@@ -129,9 +135,9 @@ const TravelPlanner = () => {
                 className={`travelplanner__container-form-inputcontrol-text ${
                   openDate ? "blue-outline" : ""
                 }`}
-              >{`${format(dates[0].startDate, "MM/dd/yyyy")} to ${format(
+              >{`${format(dates[0].startDate, "dd/MM/yyyy")} to ${format(
                 dates[0].endDate,
-                "MM/dd/yyyy"
+                "dd/MM/yyyy"
               )}`}</div>
             )}
 
@@ -139,7 +145,6 @@ const TravelPlanner = () => {
               <DateRange
                 editableDateInputs={true}
                 onChange={(item) => {
-                  console.log(item);
                   formik.setFieldValue(
                     "dates",
                     item !== null ? item : formik.initialValues.location
@@ -186,7 +191,7 @@ const TravelPlanner = () => {
             type="submit"
             className="travelplanner__container-form-button"
           >
-            Tìm kiếm
+            Bắt đầu
           </button>
         </form>
       </div>
