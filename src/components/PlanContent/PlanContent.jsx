@@ -16,6 +16,7 @@ import { Autocomplete, Box, Fade, Modal, TextField } from "@mui/material";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import ModalPlanner from "../ModalPlanner/ModalPlanner";
+import PricePieChart from "../PricePieChart/PricePieChart";
 
 const PlanContent = () => {
   const [type, setType] = useState("flight");
@@ -168,7 +169,8 @@ const PlanContent = () => {
               </button>
             </form>
           </div>
-          <div className="content__price">
+          <PricePieChart />
+          {/* <div className="content__price">
             <div className="content__price-text">
               <h3>Ngân sách: </h3>
               <p>5.000.000</p>
@@ -181,7 +183,7 @@ const PlanContent = () => {
               <h3>Còn lại: </h3>
               <p>3.000.000</p>
             </div>
-          </div>
+          </div> */}
           <button onClick={handleOpen} className="content__button">
             Chuyến đi của bạn
           </button>

@@ -1,9 +1,5 @@
-<<<<<<< Updated upstream
-import React from "react";
-import { Link } from "react-router-dom";
-=======
 import React, { useState } from "react";
->>>>>>> Stashed changes
+import { Link } from "react-router-dom";
 import "./Login.scss";
 import logo from "../../../assets/logo.png";
 import googleIcon from "../../../assets/Google.png";
