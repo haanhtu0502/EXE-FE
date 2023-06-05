@@ -18,9 +18,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { format } from "date-fns";
 import { useFormik } from "formik";
-import { Autocomplete, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addInnetary } from "../../feature/innetarySlice";
 
 const TravelPlanner = () => {
@@ -31,6 +40,10 @@ const TravelPlanner = () => {
       key: "selection",
     },
   ]);
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const user = useSelector((state) => state.user.user);
 
   const navigate = useNavigate();
 
@@ -49,6 +62,10 @@ const TravelPlanner = () => {
       budget: "",
     },
     onSubmit: (values) => {
+      if (user == null) {
+        setOpenDialog(true);
+        return;
+      }
       values.dates = values.dates.selection;
       values.dates.startDate = format(values.dates.startDate, "MM/dd/yyyy");
       values.dates.endDate = format(values.dates.endDate, "MM/dd/yyyy");
@@ -187,6 +204,7 @@ const TravelPlanner = () => {
               className="travelplanner__container-form-inputcontrol-input"
             />
           </div>
+
           <button
             type="submit"
             className="travelplanner__container-form-button"
@@ -217,6 +235,53 @@ const TravelPlanner = () => {
           </div>
         </div>
       </div>
+
+      <Dialog
+        open={openDialog}
+        onClose={() => {
+          setOpenDialog(false);
+        }}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle
+          sx={{ fontSize: "22px", fontWeight: 600 }}
+          className="dialog-title"
+          id="alert-dialog-title"
+        >
+          {"Yêu cầu đăng nhập"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            className="dialog-description"
+            id="alert-dialog-description"
+            sx={{ fontSize: "18px", fontWeight: 500, color: "black" }}
+          >
+            Bạn cần phải đăng nhập để thực hiện chức năng này
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className="dialog-action">
+          <Button
+            className="dialog-button"
+            sx={{ fontSize: "15px" }}
+            onClick={() => {
+              setOpenDialog(false);
+            }}
+          >
+            Đóng
+          </Button>
+          <Button
+            sx={{ fontSize: "15px" }}
+            className="dialog-button"
+            onClick={() => {
+              navigate("/login");
+            }}
+            autoFocus
+          >
+            Đăng nhập
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

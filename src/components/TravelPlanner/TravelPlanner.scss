@@ -138,3 +138,11 @@
     }
   }
 }
+
+.dialog-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between !important;
+  padding: 0px 20px 20px !important;
+  margin-top: 0.5rem !important;
+}
