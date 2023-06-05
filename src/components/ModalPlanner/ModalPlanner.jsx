@@ -3,8 +3,10 @@ import "./ModalPlanner.scss";
 import InnetaryFlight from "../InnetaryFlight/InnetaryFlight";
 import InnetaryHotel from "../InnetaryHotel/InnetaryHotel";
 import Empty from "../../assets/search-empty.png";
+import { useNavigate } from "react-router";
 
 const ModalPlanner = ({ handleClose }) => {
+  const navigate = useNavigate();
   return (
     <div className="innetay__container">
       <h1 className="innetary__name">Chuyến đi Hà Nội</h1>
@@ -27,7 +29,14 @@ const ModalPlanner = ({ handleClose }) => {
         <button onClick={handleClose} className="innetary__button">
           Đóng
         </button>
-        <button className="innetary__button">Thanh toán</button>
+        <button
+          onClick={() => {
+            navigate("/payment");
+          }}
+          className="innetary__button"
+        >
+          Thanh toán
+        </button>
       </div>
     </div>
   );

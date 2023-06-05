@@ -4,7 +4,10 @@ import LocationIcon from "../../assets/location.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandsHolding } from "@fortawesome/free-solid-svg-icons";
 
-const Service = ({ result }) => {
+const Service = ({ result, setOpenSnackbar, openSnackbar }) => {
+  const handleClickAdd = () => {
+    setOpenSnackbar({ ...openSnackbar, open: true });
+  };
   return (
     <div className="service__container">
       <div className="service__header">
@@ -38,7 +41,9 @@ const Service = ({ result }) => {
         <h4>1.000.000VND</h4>
       </div>
       <div className="service__detail-button">
-        <button className="service__add-button">Thêm</button>
+        <button onClick={handleClickAdd} className="service__add-button">
+          Thêm
+        </button>
       </div>
     </div>
   );

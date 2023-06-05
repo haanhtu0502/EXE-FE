@@ -12,18 +12,42 @@ import {
   faBookOpen,
 } from "@fortawesome/free-solid-svg-icons";
 import { useFormik } from "formik";
-import { Autocomplete, Box, Fade, Modal, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Fade,
+  Modal,
+  Snackbar,
+  TextField,
+} from "@mui/material";
+import MuiAlert from "@mui/material/Alert";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import ModalPlanner from "../ModalPlanner/ModalPlanner";
 import PricePieChart from "../PricePieChart/PricePieChart";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const PlanContent = () => {
   const [type, setType] = useState("flight");
   const [result, setResult] = useState([]);
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    vertical: "bottom",
+    horizontal: "center",
+  });
+
+  const { vertical, horizontal } = openSnackbar;
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({ ...openSnackbar, open: false });
+  };
+
   const [dates, setDates] = useState([
     {
       startDate: new Date(),
@@ -48,12 +72,16 @@ const PlanContent = () => {
       switch (type) {
         case "flight":
           console.log(type);
+          break;
         case "hotel":
           console.log(type);
+          break;
         case "service":
           console.log(type);
+          break;
         case "tourist":
           console.log(type);
+          break;
       }
     };
     fetchData();
@@ -184,26 +212,77 @@ const PlanContent = () => {
               <p>3.000.000</p>
             </div>
           </div> */}
-          <button onClick={handleOpen} className="content__button">
+          <button onClick={handleOpenModal} className="content__button">
             Chuyến đi của bạn
           </button>
         </div>
         <div className="content__flex-right">
-          {type === "flight" ? <Flight result={result} /> : <></>}
-          {type === "hotel" ? <Hotel result={result} /> : <></>}
-          {type === "tourist" ? <TouristSpot result={result} /> : <></>}
-          {type === "service" ? <Service result={result} /> : <></>}
+          {type === "flight" ? (
+            <Flight
+              result={result}
+              openSnackbar={openSnackbar}
+              setOpenSnackbar={setOpenSnackbar}
+            />
+          ) : (
+            <></>
+          )}
+          {type === "hotel" ? (
+            <Hotel
+              result={result}
+              openSnackbar={openSnackbar}
+              setOpenSnackbar={setOpenSnackbar}
+            />
+          ) : (
+            <></>
+          )}
+          {type === "tourist" ? (
+            <TouristSpot
+              result={result}
+              openSnackbar={openSnackbar}
+              setOpenSnackbar={setOpenSnackbar}
+            />
+          ) : (
+            <></>
+          )}
+          {type === "service" ? (
+            <Service
+              result={result}
+              openSnackbar={openSnackbar}
+              setOpenSnackbar={setOpenSnackbar}
+            />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
 
       <Modal
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        open={open}
-        onClose={handleClose}
+        open={openModal}
+        onClose={handleCloseModal}
       >
-        <ModalPlanner handleClose={handleClose} />
+        <ModalPlanner handleClose={handleCloseModal} />
       </Modal>
+
+      <Snackbar
+        open={openSnackbar.open}
+        autoHideDuration={1000}
+        anchorOrigin={{ vertical, horizontal }}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{
+            width: "100%",
+            fontSize: "15px",
+            alignItem: "center",
+          }}
+        >
+          Đã thêm vào chuyến đi của bạn
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

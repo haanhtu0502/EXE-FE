@@ -7,7 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./Hotel.scss";
 
-const Hotel = ({ result }) => {
+const Hotel = ({ result, setOpenSnackbar, openSnackbar }) => {
+  const handleClickAdd = () => {
+    setOpenSnackbar({ ...openSnackbar, open: true });
+  };
   return (
     <div className="hotel__container">
       <div className="hotel__item">
@@ -57,7 +60,10 @@ const Hotel = ({ result }) => {
                 <h3 className="hotel__item-content-info-bottom-feature-price">
                   1.000.000 VNĐ
                 </h3>
-                <button className="hotel__item-content-info-bottom-feature-button">
+                <button
+                  onClick={handleClickAdd}
+                  className="hotel__item-content-info-bottom-feature-button"
+                >
                   Thêm
                 </button>
               </div>
@@ -112,7 +118,10 @@ const Hotel = ({ result }) => {
                 <h3 className="hotel__item-content-info-bottom-feature-price">
                   1.000.000 VNĐ
                 </h3>
-                <button className="hotel__item-content-info-bottom-feature-button">
+                <button
+                  onClick={handleClickAdd}
+                  className="hotel__item-content-info-bottom-feature-button"
+                >
                   Thêm
                 </button>
               </div>

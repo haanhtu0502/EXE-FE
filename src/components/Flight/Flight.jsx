@@ -9,7 +9,10 @@ import React from "react";
 import "./Flight.scss";
 import Arrow from "../../assets/Arrow.png";
 
-const Flight = ({ result }) => {
+const Flight = ({ result, setOpenSnackbar, openSnackbar }) => {
+  const handleClickAdd = () => {
+    setOpenSnackbar({ ...openSnackbar, open: true });
+  };
   return (
     <div className="fligth__container">
       <div className="flight__item">
@@ -30,7 +33,12 @@ const Flight = ({ result }) => {
             <h3 className="flight__item-content-departure-location">Hà Nội </h3>
           </div>
           <h3 className="flight__item-content-price">2.000.000</h3>
-          <button className="flight__item-content-button">Thêm</button>
+          <button
+            onClick={handleClickAdd}
+            className="flight__item-content-button"
+          >
+            Thêm
+          </button>
         </div>
       </div>
       <div className="flight__item">
@@ -51,7 +59,12 @@ const Flight = ({ result }) => {
             <h3 className="flight__item-content-departure-location">Hà Nội </h3>
           </div>
           <h3 className="flight__item-content-price">2.000.000</h3>
-          <button className="flight__item-content-button">Thêm</button>
+          <button
+            onClick={handleClickAdd}
+            className="flight__item-content-button"
+          >
+            Thêm
+          </button>
         </div>
       </div>
       <div className="flight__item">
@@ -72,7 +85,12 @@ const Flight = ({ result }) => {
             <h3 className="flight__item-content-departure-location">Hà Nội </h3>
           </div>
           <h3 className="flight__item-content-price">2.000.000</h3>
-          <button className="flight__item-content-button">Thêm</button>
+          <button
+            onClick={handleClickAdd}
+            className="flight__item-content-button"
+          >
+            Thêm
+          </button>
         </div>
       </div>
     </div>
