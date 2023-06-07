@@ -34,7 +34,7 @@ const InnetaryHotel = () => {
             }`}
             style={{ color: "#aeaeae" }}
           >
-            Ngày đi / Ngày đến
+            Check in / Check out
           </div>
         ) : (
           <div

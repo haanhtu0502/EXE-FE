@@ -4,6 +4,7 @@ import InnetaryFlight from "../InnetaryFlight/InnetaryFlight";
 import InnetaryHotel from "../InnetaryHotel/InnetaryHotel";
 import Empty from "../../assets/search-empty.png";
 import { useNavigate } from "react-router";
+import InnetaryService from "../InnetaryService/InnetaryService";
 
 const ModalPlanner = ({ handleClose }) => {
   const navigate = useNavigate();
@@ -17,11 +18,9 @@ const ModalPlanner = ({ handleClose }) => {
       <h3 className="innetary__title">Khách sạn</h3>
       <InnetaryHotel />
 
-      <h3 className="innetary__title">Địa điểm du lịch</h3>
-      <div className="search-empty">
-        <img src={Empty} alt="" />
-      </div>
       <h3 className="innetary__title">Dịch vụ</h3>
+      <InnetaryService />
+      <h3 className="innetary__title">Địa điểm du lịch</h3>
       <div className="search-empty">
         <img src={Empty} alt="" />
       </div>
