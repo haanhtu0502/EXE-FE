@@ -113,7 +113,14 @@ const TravelPlanner = () => {
               id="location"
               name="location"
               options={location}
-              sx={{ width: "450px", outline: "none" }}
+              sx={{
+                width: "450px",
+                outline: "none",
+                "& + .MuiAutocomplete-popper .MuiAutocomplete-option": {
+                  fontSize: "15px",
+                  paddingY: "10px",
+                },
+              }}
               defaultValue={formik.values.location}
               onChange={(e, value) => {
                 formik.setFieldValue(
@@ -164,7 +171,7 @@ const TravelPlanner = () => {
                 onChange={(item) => {
                   formik.setFieldValue(
                     "dates",
-                    item !== null ? item : formik.initialValues.location
+                    item !== null ? item : formik.initialValues.dates
                   );
                   setDates([item.selection]);
                   setOpenDate(!openDate);

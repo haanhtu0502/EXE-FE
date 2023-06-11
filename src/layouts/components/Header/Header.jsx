@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Header.scss";
 import Logo from "../../../assets/logo.png";
-import Search from "../Search/Search";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MenuIcon from "../../../assets/menu.png";
 import UserIcon from "../../../assets/user.png";
@@ -73,19 +72,6 @@ const Header = () => {
           </ul>
         </nav>
         <div className="header__nav-feature">
-          <Search />
-          {/* <div className="header__nav-feature-icon">
-            <img
-              className="header__nav-feature-icon-menu"
-              src={MenuIcon}
-              alt="Logo"
-            />
-            <img
-              className="header__nav-feature-icon-user"
-              src={UserIcon}
-              alt="Logo"
-            />
-          </div> */}
           <Button
             className="header__nav-feature-icon"
             id="basic-button"
@@ -118,17 +104,35 @@ const Header = () => {
           >
             {user == null
               ? headerMenu.map((item) => (
-                  <MenuItem>
+                  <MenuItem
+                    style={{
+                      fontSize: "10px",
+                      padding: "10px 15px",
+                      fontWeight: 600,
+                    }}
+                  >
                     <Link to={item.to}>{item.display}</Link>{" "}
                   </MenuItem>
                 ))
               : headerMenuLogined.map((item) => {
                   return item.display == "Đăng xuất" ? (
-                    <MenuItem>
+                    <MenuItem
+                      style={{
+                        fontSize: "10px",
+                        padding: "10px 15px",
+                        fontWeight: 600,
+                      }}
+                    >
                       <Link onClick={handleLogout}>{item.display}</Link>{" "}
                     </MenuItem>
                   ) : (
-                    <MenuItem>
+                    <MenuItem
+                      style={{
+                        fontSize: "10px",
+                        padding: "10px 15px",
+                        fontWeight: 600,
+                      }}
+                    >
                       <Link to={item.to}>{item.display}</Link>{" "}
                     </MenuItem>
                   );

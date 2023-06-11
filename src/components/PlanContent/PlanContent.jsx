@@ -25,6 +25,10 @@ import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import ModalPlanner from "../ModalPlanner/ModalPlanner";
 import PricePieChart from "../PricePieChart/PricePieChart";
+import SearchFlight from "../SearchFlight/SearchFlight";
+import SearchHotel from "../SearchHotel/SearchHotel";
+import SearchService from "../SearchService/SearchService";
+import SearchTourist from "../SearchTourist/SearchTourist";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -59,6 +63,48 @@ const PlanContent = () => {
   const flightFormik = useFormik({
     initialValues: {
       location: "Hà Nội",
+      brand: { name: "VietJet Aviation", id: 1 },
+      dates: {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: "selection",
+      },
+      minPrice: "",
+      maxPrice: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+
+  const hotelFormik = useFormik({
+    initialValues: {
+      location: "Hà Nội",
+      rating: { name: "5 sao", value: 5 },
+      roomType: { name: "1 giường đôi cực lớn", value: 1 },
+      minPrice: "",
+      maxPrice: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+
+  const serviceFormik = useFormik({
+    initialValues: {
+      location: "Hà Nội",
+      minPrice: "",
+      maxPrice: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+
+  const touristFormik = useFormik({
+    initialValues: {
+      location: "Hà Nội",
+      preference: { name: "Thiên nhiên", value: 1 },
       minPrice: "",
       maxPrice: "",
     },
@@ -132,70 +178,31 @@ const PlanContent = () => {
       <div className="content__flex">
         <div className="content__flex-left">
           <div className="content__search">
-            <form action="" onSubmit={flightFormik.handleSubmit}>
-              <label className="content__search-label" htmlFor="location">
-                Điểm đến:
-              </label>
-              <Autocomplete
-                disablePortal
-                id="location"
-                name="location"
-                options={location}
-                sx={{ width: "100%" }}
-                defaultValue={flightFormik.values.location}
-                onChange={(e, value) => {
-                  flightFormik.setFieldValue(
-                    "location",
-                    value !== null ? value : flightFormik.initialValues.location
-                  );
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    className="content__search-input-location"
-                    {...params}
-                  />
-                )}
+            {type === "flight" ? (
+              <SearchFlight
+                formik={flightFormik}
+                location={location}
+                dates={dates}
+                setDates={setDates}
               />
-              <label className="content__search-label" htmlFor="location">
-                Ngày đi/ Ngày đến:
-              </label>
-              <div
-                className={`travelplanner__container-form-inputcontrol-text `}
-                style={{ width: "100%" }}
-              >{`${format(dates[0].startDate, "dd/MM/yyyy")} to ${format(
-                dates[0].endDate,
-                "dd/MM/yyyy"
-              )}`}</div>
-              <div className="content__search-price">
-                <label htmlFor="minPrice" className="content__search-label">
-                  Giá thấp nhất:
-                </label>
-                <input
-                  value={flightFormik.values.minPrice}
-                  onChange={flightFormik.handleChange}
-                  placeholder="(VNĐ)"
-                  type="number"
-                  name="minPrice"
-                  className="content__search-label-price"
-                />
-              </div>
-              <div className="content__search-price">
-                <label htmlFor="maxPrice" className="content__search-label">
-                  Giá cao nhất:
-                </label>
-                <input
-                  value={flightFormik.values.maxPrice}
-                  onChange={flightFormik.handleChange}
-                  placeholder="(VNĐ)"
-                  type="number"
-                  name="maxPrice"
-                  className="content__search-label-price"
-                />
-              </div>
-              <button className="content__search-button" type="submit">
-                Tìm kiếm
-              </button>
-            </form>
+            ) : (
+              <></>
+            )}
+            {type === "hotel" ? (
+              <SearchHotel formik={hotelFormik} location={location} />
+            ) : (
+              <></>
+            )}
+            {type === "service" ? (
+              <SearchService formik={serviceFormik} location={location} />
+            ) : (
+              <></>
+            )}
+            {type === "tourist" ? (
+              <SearchTourist formik={touristFormik} location={location} />
+            ) : (
+              <></>
+            )}
           </div>
           <PricePieChart />
           {/* <div className="content__price">
