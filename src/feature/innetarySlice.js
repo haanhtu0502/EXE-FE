@@ -1,24 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchItenary } from "../utils/fetchLocalStorage";
+
+const itenaryInfo = fetchItenary();
 
 const innetary = createSlice({
   name: "innetary",
   initialState: {
-    info: {},
-    // location: "",
-    // dates: [
-    //   {
-    //     startDate: null,
-    //     endDate: null,
-    //     key: "selection",
-    //   },
-    // ],
-    // name: "",
-    // number: "",
-    // budget: "",
+    itenary: itenaryInfo,
   },
   reducers: {
     addInnetary: (state, action) => {
-      return { ...state, info: action.payload };
+      state.itenary = action.payload;
     },
   },
 });

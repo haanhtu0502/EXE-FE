@@ -9,7 +9,6 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/material": "^5.13.3",
-    "@mui/styles": "^5.13.2",
     "@mui/x-date-pickers": "^6.6.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
@@ -31,7 +30,8 @@
     "recharts": "^2.6.2",
     "rsuite": "^5.34.1",
     "sass": "^1.62.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yup": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

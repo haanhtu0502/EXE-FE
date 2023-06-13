@@ -13,6 +13,7 @@ const SearchService = ({ formik, location }) => {
           id="location"
           name="location"
           options={location}
+          getOptionLabel={(option) => option.name}
           sx={{
             width: "100%",
             "& + .MuiAutocomplete-popper .MuiAutocomplete-option": {

@@ -29,6 +29,7 @@ import SearchFlight from "../SearchFlight/SearchFlight";
 import SearchHotel from "../SearchHotel/SearchHotel";
 import SearchService from "../SearchService/SearchService";
 import SearchTourist from "../SearchTourist/SearchTourist";
+import { useParams } from "react-router";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -52,38 +53,99 @@ const PlanContent = () => {
     setOpenSnackbar({ ...openSnackbar, open: false });
   };
 
+  const itenary = useSelector((state) => state.innetary.itenary);
+
+  const {
+    id,
+    budget,
+    destinationId,
+    destinationName,
+    title,
+    endDate,
+    startDate,
+  } = itenary;
+
   const [dates, setDates] = useState([
     {
-      startDate: new Date(),
-      endDate: new Date(),
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
       key: "selection",
     },
   ]);
 
+  const [planInfo, setPlanInfo] = useState(null);
+  const [location, setLocation] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchItenaryInfo = () => {
+      fetch(`https://guidi.azurewebsites.net/api/Itinerary/${id}`)
+        .then((res) => res.json())
+        .then((response) => {
+          setPlanInfo(response.result);
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
+    };
+    const fetchLocations = () => {
+      fetch(`https://guidi.azurewebsites.net/api/Location`)
+        .then((res) => res.json())
+        .then((response) => {
+          setLocation(response.result);
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
+    };
+
+    fetchLocations();
+    fetchItenaryInfo();
+  }, []);
+
   const flightFormik = useFormik({
     initialValues: {
-      location: "Hà Nội",
-      brand: { name: "VietJet Aviation", id: 1 },
-      dates: {
-        startDate: new Date(),
-        endDate: new Date(),
-        key: "selection",
-      },
-      minPrice: "",
-      maxPrice: "",
+      locationFrom: { name: "Tất cả", id: 0 },
+      location: { name: destinationName, id: destinationId },
+      brand: "Tất cả",
+      minPrice: 0,
+      maxPrice: budget,
+      number: "",
     },
     onSubmit: (values) => {
-      console.log(values);
+      fetch(
+        `https://guidi.azurewebsites.net/api/Flight?destinationtoid=${
+          values.location.id
+        }${
+          values.locationFrom.name === "Tất cả"
+            ? ""
+            : "&destinationfromid=" + values.locationFrom.id
+        }${values.brand === "Tất cả" ? "" : "&brandName=" + values.brand}${
+          values.minPrice === "" ? "" : "&minPrice=" + values.minPrice
+        }${values.maxPrice === "" ? "" : "&maxPrice=" + values.maxPrice}${
+          values.number === "" ? "" : "&numberOfSeats=" + values.number
+        }`
+      )
+        .then((res) => res.json())
+        .then((response) => {
+          console.log(response);
+          if (response.errorMessage) {
+            setResult([]);
+            return;
+          }
+          setResult(response.result);
+        })
+        .catch((err) => console.log(err));
     },
   });
 
   const hotelFormik = useFormik({
     initialValues: {
-      location: "Hà Nội",
+      location: { name: destinationName, id: destinationId },
       rating: { name: "5 sao", value: 5 },
       roomType: { name: "1 giường đôi cực lớn", value: 1 },
-      minPrice: "",
-      maxPrice: "",
+      minPrice: 0,
+      maxPrice: budget,
     },
     onSubmit: (values) => {
       console.log(values);
@@ -92,9 +154,9 @@ const PlanContent = () => {
 
   const serviceFormik = useFormik({
     initialValues: {
-      location: "Hà Nội",
-      minPrice: "",
-      maxPrice: "",
+      location: { name: destinationName, id: destinationId },
+      minPrice: 0,
+      maxPrice: budget,
     },
     onSubmit: (values) => {
       console.log(values);
@@ -103,10 +165,10 @@ const PlanContent = () => {
 
   const touristFormik = useFormik({
     initialValues: {
-      location: "Hà Nội",
-      preference: { name: "Thiên nhiên", value: 1 },
-      minPrice: "",
-      maxPrice: "",
+      location: { name: destinationName, id: destinationId },
+      preference: { name: "Tất cả", id: 0 },
+      minPrice: 0,
+      maxPrice: budget,
     },
     onSubmit: (values) => {
       console.log(values);
@@ -117,7 +179,40 @@ const PlanContent = () => {
     const fetchData = () => {
       switch (type) {
         case "flight":
-          console.log(type);
+          const fetchFlights = () => {
+            fetch(
+              `https://guidi.azurewebsites.net/api/Flight?destinationtoid=${
+                flightFormik.values.location.id
+              }${
+                flightFormik.values.locationFrom.name === "Tất cả"
+                  ? ""
+                  : "&destinationfromid=" + flightFormik.values.locationFrom.id
+              }${
+                flightFormik.values.brand === "Tất cả"
+                  ? ""
+                  : "&brandName=" + flightFormik.values.brand
+              }${
+                flightFormik.values.minPrice === ""
+                  ? ""
+                  : "&minPrice=" + flightFormik.values.minPrice
+              }${
+                flightFormik.values.maxPrice === ""
+                  ? ""
+                  : "&maxPrice=" + flightFormik.values.maxPrice
+              }${
+                flightFormik.values.number === ""
+                  ? ""
+                  : "&numberOfSeats=" + flightFormik.values.number
+              }`
+            )
+              .then((res) => res.json())
+              .then((response) => {
+                console.log(response);
+                setResult(response.result);
+              })
+              .catch((err) => console.log(err));
+          };
+          fetchFlights();
           break;
         case "hotel":
           console.log(type);
@@ -128,10 +223,12 @@ const PlanContent = () => {
         case "tourist":
           console.log(type);
           break;
+        default:
+          break;
       }
     };
     fetchData();
-  }, [type, flightFormik.values]);
+  }, [type]);
 
   const filterNav = [
     {
@@ -156,8 +253,6 @@ const PlanContent = () => {
     },
   ];
 
-  const location = ["HCM", "Hà Nội", "Đà Nẵng"];
-
   return (
     <div className="content__container">
       <div className="content__filter">
@@ -180,6 +275,7 @@ const PlanContent = () => {
           <div className="content__search">
             {type === "flight" ? (
               <SearchFlight
+                loading={loading}
                 formik={flightFormik}
                 location={location}
                 dates={dates}
@@ -205,20 +301,6 @@ const PlanContent = () => {
             )}
           </div>
           <PricePieChart />
-          {/* <div className="content__price">
-            <div className="content__price-text">
-              <h3>Ngân sách: </h3>
-              <p>5.000.000</p>
-            </div>
-            <div className="content__price-text">
-              <h3>Đã tiêu: </h3>
-              <p>2.000.000</p>
-            </div>
-            <div className="content__price-text">
-              <h3>Còn lại: </h3>
-              <p>3.000.000</p>
-            </div>
-          </div> */}
           <button onClick={handleOpenModal} className="content__button">
             Chuyến đi của bạn
           </button>

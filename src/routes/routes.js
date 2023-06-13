@@ -14,7 +14,11 @@ const publicRoutes = [
     layout: DefaultLayout,
   },
   { path: "/planner", component: TravelPlanner, layout: DefaultLayout },
-  { path: "/planner/plan", component: PlanContent, PlanContent: DefaultLayout },
+  {
+    path: "/planner/plan",
+    component: PlanContent,
+    PlanContent: DefaultLayout,
+  },
   { path: "/blog", component: Blog, layout: DefaultLayout },
   { path: "/tourguide", component: TourGuide, layout: DefaultLayout },
   { path: "/login", component: Login, layout: null },

@@ -7,7 +7,7 @@
 .flight__item {
   background: #ffffff;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.75);
-  width: 800px;
+  width: 900px;
   margin-bottom: 4rem;
 
   &-header {
@@ -57,5 +57,17 @@
         opacity: 0.8;
       }
     }
+  }
+}
+
+.search__result-empty {
+  width: 100%;
+  text-align: center;
+  img {
+    width: 30%;
+  }
+  h1 {
+    font-weight: 600;
+    color: rgb(120, 117, 117);
   }
 }

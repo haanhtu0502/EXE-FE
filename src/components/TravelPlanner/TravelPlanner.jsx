@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
@@ -42,6 +42,9 @@ const TravelPlanner = () => {
   ]);
 
   const [openDialog, setOpenDialog] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [errDate, setErrDate] = useState("");
+  const [errBudget, setErrBudget] = useState("");
 
   const user = useSelector((state) => state.user.user);
 
@@ -58,24 +61,79 @@ const TravelPlanner = () => {
         key: "selection",
       },
       name: "",
-      number: "",
       budget: "",
     },
     onSubmit: (values) => {
+      console.log(values);
+      setErrBudget("");
+      setErrDate("");
       if (user == null) {
         setOpenDialog(true);
         return;
       }
-      values.dates = values.dates.selection;
-      values.dates.startDate = format(values.dates.startDate, "MM/dd/yyyy");
-      values.dates.endDate = format(values.dates.endDate, "MM/dd/yyyy");
-      const action = addInnetary(values);
-      dispatch(action);
-      navigate("/planner/plan");
+
+      if (values.budget < 2000000 || values.dates.startDate == null) {
+        if (values.budget < 2000000) {
+          setErrBudget("Bạn nên có ngân sách tối thiểu 2.000.000 đồng");
+        }
+        if (values.dates.startDate == null) {
+          setErrDate("Vui lòng nhập ngày đến và ngày đi");
+        }
+        return;
+      }
+
+      // values.dates = values.dates.selection;
+
+      const data = {
+        title: values.name,
+        destinationId: values.location.id,
+        startDate: format(values.dates.startDate, "yyyy-MM-dd"),
+        endDate: format(values.dates.endDate, "yyyy-MM-dd"),
+        budget: values.budget,
+      };
+
+      const userId = JSON.parse(localStorage.getItem("user"));
+
+      fetch("https://guidi.azurewebsites.net/api/Itinerary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          userId: user.id,
+        },
+        body: JSON.stringify(data),
+      })
+        .then((res) => res.json())
+        .then((response) => {
+          console.log(response);
+          const itenary = {
+            budget: values.budget,
+            destinationId: response.result.destinationId,
+            destinationName: values.location.name,
+            title: response.result.title,
+            startDate: response.result.startDate,
+            endDate: response.result.endDate,
+            id: response.result.id,
+          };
+          const action = addInnetary(itenary);
+          dispatch(action);
+          localStorage.setItem("itenary", JSON.stringify(itenary));
+          navigate(`/planner/plan`);
+        })
+        .catch((err) => console.log(err));
     },
   });
 
-  const location = ["HCM", "Hà Nội", "Đà Nẵng"];
+  const [location, setLocation] = useState([]);
+
+  useEffect(() => {
+    fetch("https://guidi.azurewebsites.net/api/Location")
+      .then((res) => res.json())
+      .then((data) => {
+        setLocation(data.result);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   const [openDate, setOpenDate] = useState(false);
   return (
@@ -95,6 +153,7 @@ const TravelPlanner = () => {
               className="travelplanner__container-form-inputcontrol-icon"
             />
             <input
+              required
               name="name"
               value={formik.values.name}
               onChange={formik.handleChange}
@@ -113,6 +172,7 @@ const TravelPlanner = () => {
               id="location"
               name="location"
               options={location}
+              getOptionLabel={(option) => option.name}
               sx={{
                 width: "450px",
                 outline: "none",
@@ -121,7 +181,7 @@ const TravelPlanner = () => {
                   paddingY: "10px",
                 },
               }}
-              defaultValue={formik.values.location}
+              // defaultValue={formik.values.location}
               onChange={(e, value) => {
                 formik.setFieldValue(
                   "location",
@@ -130,6 +190,7 @@ const TravelPlanner = () => {
               }}
               renderInput={(params) => (
                 <TextField
+                  required
                   className=""
                   {...params}
                   sx={{ border: "none" }}
@@ -143,7 +204,7 @@ const TravelPlanner = () => {
               icon={faCalendarDays}
               className="travelplanner__container-form-inputcontrol-icon"
             />
-            {dates[0].startDate === null ? (
+            {formik.values.dates.startDate === null ? (
               <div
                 onClick={() => setOpenDate(!openDate)}
                 className={`travelplanner__container-form-inputcontrol-text ${
@@ -159,10 +220,10 @@ const TravelPlanner = () => {
                 className={`travelplanner__container-form-inputcontrol-text ${
                   openDate ? "blue-outline" : ""
                 }`}
-              >{`${format(dates[0].startDate, "dd/MM/yyyy")} to ${format(
-                dates[0].endDate,
+              >{`${format(
+                formik.values.dates.startDate,
                 "dd/MM/yyyy"
-              )}`}</div>
+              )} to ${format(formik.values.dates.endDate, "dd/MM/yyyy")}`}</div>
             )}
 
             {openDate && (
@@ -171,7 +232,9 @@ const TravelPlanner = () => {
                 onChange={(item) => {
                   formik.setFieldValue(
                     "dates",
-                    item !== null ? item : formik.initialValues.dates
+                    item !== null
+                      ? [item.selection][0]
+                      : formik.initialValues.dates
                   );
                   setDates([item.selection]);
                   setOpenDate(!openDate);
@@ -183,26 +246,22 @@ const TravelPlanner = () => {
               />
             )}
           </div>
-          <div className="travelplanner__container-form-inputcontrol">
-            <FontAwesomeIcon
-              icon={faUser}
-              className="travelplanner__container-form-inputcontrol-icon"
-            />
-            <input
-              name="number"
-              value={formik.values.number}
-              onChange={formik.handleChange}
-              placeholder="Số người cùng đi"
-              type="number"
-              className="travelplanner__container-form-inputcontrol-input"
-            />
-          </div>
+          {errDate && (
+            <p
+              style={{ marginTop: "0", fontSize: "15px", marginLeft: "45px" }}
+              className="auth__error"
+            >
+              {errDate}
+            </p>
+          )}
+
           <div className="travelplanner__container-form-inputcontrol">
             <FontAwesomeIcon
               icon={faMoneyBill}
               className="travelplanner__container-form-inputcontrol-icon"
             />
             <input
+              required
               name="budget"
               value={formik.values.budget}
               onChange={formik.handleChange}
@@ -211,6 +270,14 @@ const TravelPlanner = () => {
               className="travelplanner__container-form-inputcontrol-input"
             />
           </div>
+          {errBudget && (
+            <p
+              style={{ marginTop: "0", fontSize: "15px", marginLeft: "45px" }}
+              className="auth__error"
+            >
+              {errBudget}
+            </p>
+          )}
 
           <button
             type="submit"

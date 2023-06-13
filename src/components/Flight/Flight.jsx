@@ -8,6 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import "./Flight.scss";
 import Arrow from "../../assets/Arrow.png";
+import { format } from "date-fns";
+import Empty from "../../assets/search-empty.png";
 
 const Flight = ({ result, setOpenSnackbar, openSnackbar }) => {
   const handleClickAdd = () => {
@@ -15,84 +17,58 @@ const Flight = ({ result, setOpenSnackbar, openSnackbar }) => {
   };
   return (
     <div className="fligth__container">
-      <div className="flight__item">
-        <div className="flight__item-header">
-          <FontAwesomeIcon icon={faPlane} />
-          <h3 className="flight__item-header-date">25/06/2023</h3>
-          <h3 className="flight__item-header-seat">4 người</h3>
+      {result.length === 0 ? (
+        <div className="search__result-empty">
+          <img src={Empty} alt="" />
+          <h1>Không tìm thấy kết quả nào</h1>
         </div>
-        <div className="flight__item-content">
-          <div className="flight__item-content-brand">VietJet Aviation</div>
-          <div className="flight__item-content-departure">
-            <h3 className="flight__item-content-departure-time">05:30</h3>
-            <h3 className="flight__item-content-departure-location">TP.HCM</h3>
+      ) : (
+        result.map((item) => (
+          <div className="flight__item">
+            <div className="flight__item-header">
+              <FontAwesomeIcon icon={faPlane} />
+              <h3 className="flight__item-header-date">
+                {format(new Date(item.date), "dd/MM/yyyy")}
+              </h3>
+              <h3 className="flight__item-header-seat">
+                {item.numberOfSeats} chỗ ngồi
+              </h3>
+            </div>
+            <div className="flight__item-content">
+              <div className="flight__item-content-brand">{item.brandName}</div>
+              <div className="flight__item-content-departure">
+                <h3 className="flight__item-content-departure-time">
+                  {item.startTime.slice(0, -3)}
+                </h3>
+                <h3 className="flight__item-content-departure-location">
+                  {item.destinationFromName}
+                </h3>
+              </div>
+              <img className="flight__item-content-img" src={Arrow} alt="" />
+              <div className="flight__item-content-departure">
+                <h3 className="flight__item-content-departure-time">
+                  {item.endTime.slice(0, -3)}
+                </h3>
+                <h3 className="flight__item-content-departure-location">
+                  {item.destinationToName}
+                </h3>
+              </div>
+              <h3 className="flight__item-content-price">
+                {item.price.toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
+              </h3>
+              <button
+                onClick={handleClickAdd}
+                className="flight__item-content-button"
+              >
+                Thêm
+              </button>
+            </div>
           </div>
-          <img className="flight__item-content-img" src={Arrow} alt="" />
-          <div className="flight__item-content-departure">
-            <h3 className="flight__item-content-departure-time">07:40</h3>
-            <h3 className="flight__item-content-departure-location">Hà Nội </h3>
-          </div>
-          <h3 className="flight__item-content-price">2.000.000</h3>
-          <button
-            onClick={handleClickAdd}
-            className="flight__item-content-button"
-          >
-            Thêm
-          </button>
-        </div>
-      </div>
-      <div className="flight__item">
-        <div className="flight__item-header">
-          <FontAwesomeIcon icon={faPlane} />
-          <h3 className="flight__item-header-date">25/06/2023</h3>
-          <h3 className="flight__item-header-seat">4 người</h3>
-        </div>
-        <div className="flight__item-content">
-          <div className="flight__item-content-brand">VietJet Aviation</div>
-          <div className="flight__item-content-departure">
-            <h3 className="flight__item-content-departure-time">05:30</h3>
-            <h3 className="flight__item-content-departure-location">TP.HCM</h3>
-          </div>
-          <img className="flight__item-content-img" src={Arrow} alt="" />
-          <div className="flight__item-content-departure">
-            <h3 className="flight__item-content-departure-time">07:40</h3>
-            <h3 className="flight__item-content-departure-location">Hà Nội </h3>
-          </div>
-          <h3 className="flight__item-content-price">2.000.000</h3>
-          <button
-            onClick={handleClickAdd}
-            className="flight__item-content-button"
-          >
-            Thêm
-          </button>
-        </div>
-      </div>
-      <div className="flight__item">
-        <div className="flight__item-header">
-          <FontAwesomeIcon icon={faPlane} />
-          <h3 className="flight__item-header-date">25/06/2023</h3>
-          <h3 className="flight__item-header-seat">4 người</h3>
-        </div>
-        <div className="flight__item-content">
-          <div className="flight__item-content-brand">VietJet Aviation</div>
-          <div className="flight__item-content-departure">
-            <h3 className="flight__item-content-departure-time">05:30</h3>
-            <h3 className="flight__item-content-departure-location">TP.HCM</h3>
-          </div>
-          <img className="flight__item-content-img" src={Arrow} alt="" />
-          <div className="flight__item-content-departure">
-            <h3 className="flight__item-content-departure-time">07:40</h3>
-            <h3 className="flight__item-content-departure-location">Hà Nội </h3>
-          </div>
-          <h3 className="flight__item-content-price">2.000.000</h3>
-          <button
-            onClick={handleClickAdd}
-            className="flight__item-content-button"
-          >
-            Thêm
-          </button>
-        </div>
-      </div>
+        ))
+      )}
     </div>
   );
 };

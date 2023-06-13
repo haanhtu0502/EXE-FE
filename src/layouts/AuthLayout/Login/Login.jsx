@@ -13,9 +13,17 @@ import { signInWithPopup } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { login } from "../../../feature/userSlice";
 import { useNavigate } from "react-router";
+import { CircularProgress } from "@mui/material";
 
 const Login = () => {
   const [user, setUser] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [errMessage, setErrMessage] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -24,6 +32,7 @@ const Login = () => {
   const googleAuth = () => {
     try {
       signInWithPopup(auth, googleProvider).then((data) => {
+        console.log(data);
         const {
           user: { providerData },
         } = data;
@@ -35,6 +44,41 @@ const Login = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    fetch(`https://guidi.azurewebsites.net/api/User/Login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === false || data.errors) {
+          setErrMessage("Sai email hoặc mật khẩu");
+          setLoading(false);
+          return;
+        } else {
+          const result = {
+            id: data.result.id,
+          };
+          const action = login(result);
+          dispatch(action);
+          localStorage.setItem("user", JSON.stringify(result));
+          setLoading(false);
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const facebookAuth = () => {
@@ -61,21 +105,42 @@ const Login = () => {
         </div>
         <div className="right_content">
           <h1>Đăng Nhập</h1>
+          {errMessage && (
+            <p style={{ textAlign: "center" }} className="auth__error">
+              Sai email hoặc mật khẩu
+            </p>
+          )}
+
           <div>
-            <input
-              className="right_content-input"
-              type="text"
-              placeholder="Địa chỉ Email"
-            />
-            <br />
-            <input
-              className="right_content-input"
-              type="password"
-              placeholder="Mật khẩu"
-            />
-            <br />
-            <button className="right_content-login-button">ĐĂNG NHẬP</button>
-            <br />
+            <form action="">
+              <input
+                className="right_content-input"
+                type="text"
+                placeholder="Địa chỉ Email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+              <br />
+              <input
+                className="right_content-input"
+                type="password"
+                placeholder="Mật khẩu"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+              <br />
+              <button
+                onSubmit={handleLogin}
+                onClick={handleLogin}
+                className="right_content-login-button"
+              >
+                {loading ? <CircularProgress /> : "ĐĂNG NHẬP"}
+              </button>
+              <br />
+            </form>
+
             <div className="right_content-account">
               <div>
                 <input type="checkbox" name="rememberCheckbox" />

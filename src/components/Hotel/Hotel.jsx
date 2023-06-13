@@ -50,11 +50,11 @@ const Hotel = ({ result, setOpenSnackbar, openSnackbar }) => {
             <div className="hotel__item-content-info-bottom">
               <div className="hotel__item-content-info-bottom-room">
                 <h3 className="hotel__item-content-info-bottom-room-name">
-                  Phòng cổ điển có giường cỡ King
+                  Phòng tiêu chuẩn
                 </h3>
-                <h3 className="hotel__item-content-info-bottom-room-type">
+                {/* <h3 className="hotel__item-content-info-bottom-room-type">
                   1 giường đôi cực lớn
-                </h3>
+                </h3> */}
               </div>
               <div className="hotel__item-content-info-bottom-feature">
                 <h3 className="hotel__item-content-info-bottom-feature-price">

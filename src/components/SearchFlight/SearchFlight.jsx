@@ -1,15 +1,23 @@
 import { Autocomplete, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DateRange } from "react-date-range";
 
-const SearchFlight = ({ formik, location, dates, setDates }) => {
-  const brand = [
-    { name: "VietJet Aviation", id: 1 },
-    { name: "Bamboo Airway", id: 2 },
-    { name: "Vietnam Airline", id: 3 },
-  ];
+const SearchFlight = ({ loading, formik, location }) => {
+  const [brands, setBrands] = useState([]);
+
+  useEffect(() => {
+    const fetchFlightBrand = () => {
+      fetch(`https://guidi.azurewebsites.net/api/Flight/BrandName`)
+        .then((res) => res.json())
+        .then((response) => {
+          setBrands([...response.result, "Tất cả"]);
+        })
+        .catch((err) => console.log(err));
+    };
+    fetchFlightBrand();
+  }, []);
 
   const [openDate, setOpenDate] = useState(false);
 
@@ -18,6 +26,33 @@ const SearchFlight = ({ formik, location, dates, setDates }) => {
       {" "}
       <form action="" onSubmit={formik.handleSubmit}>
         <label className="content__search-label" htmlFor="location">
+          Điểm khởi hành:
+        </label>
+        <Autocomplete
+          disablePortal
+          id="locationFrom"
+          name="locationFrom"
+          options={[...location, { name: "Tất cả", id: 0 }]}
+          getOptionLabel={(option) => option.name}
+          sx={{
+            width: "100%",
+            "& + .MuiAutocomplete-popper .MuiAutocomplete-option": {
+              fontSize: "15px",
+              paddingY: "10px",
+            },
+          }}
+          defaultValue={formik.values.locationFrom}
+          onChange={(e, value) => {
+            formik.setFieldValue(
+              "locationFrom",
+              value !== null ? value : formik.initialValues.locationFrom
+            );
+          }}
+          renderInput={(params) => (
+            <TextField className="content__search-input-location" {...params} />
+          )}
+        />
+        <label className="content__search-label" htmlFor="location">
           Điểm đến:
         </label>
         <Autocomplete
@@ -25,6 +60,7 @@ const SearchFlight = ({ formik, location, dates, setDates }) => {
           id="location"
           name="location"
           options={location}
+          getOptionLabel={(option) => option.name}
           sx={{
             width: "100%",
             "& + .MuiAutocomplete-popper .MuiAutocomplete-option": {
@@ -50,8 +86,7 @@ const SearchFlight = ({ formik, location, dates, setDates }) => {
           disablePortal
           id="brand"
           name="brand"
-          options={brand}
-          getOptionLabel={(option) => option.name}
+          options={brands}
           sx={{
             width: "100%",
             "& + .MuiAutocomplete-popper .MuiAutocomplete-option": {
@@ -70,34 +105,7 @@ const SearchFlight = ({ formik, location, dates, setDates }) => {
             <TextField className="content__search-input-location" {...params} />
           )}
         />
-        <label className="content__search-label" htmlFor="location">
-          Ngày đi/ Ngày đến:
-        </label>
-        <div
-          onClick={() => setOpenDate(!openDate)}
-          className={`travelplanner__container-form-inputcontrol-text `}
-          style={{ width: "100%" }}
-        >{`${format(dates[0].startDate, "dd/MM/yyyy")} to ${format(
-          dates[0].endDate,
-          "dd/MM/yyyy"
-        )}`}</div>
-        {openDate && (
-          <DateRange
-            editableDateInputs={true}
-            onChange={(item) => {
-              formik.setFieldValue(
-                "dates",
-                item !== null ? item : formik.initialValues.dates
-              );
-              setDates([item.selection]);
-              setOpenDate(!openDate);
-            }}
-            moveRangeOnFirstSelection={false}
-            ranges={dates}
-            className="date"
-            minDate={new Date()}
-          />
-        )}
+
         <div className="content__search-price">
           <label htmlFor="minPrice" className="content__search-label">
             Giá thấp nhất:
@@ -121,6 +129,18 @@ const SearchFlight = ({ formik, location, dates, setDates }) => {
             placeholder="(VNĐ)"
             type="number"
             name="maxPrice"
+            className="content__search-label-price"
+          />
+        </div>
+        <div className="content__search-price">
+          <label htmlFor="maxPrice" className="content__search-label">
+            Số chỗ ngồi:
+          </label>
+          <input
+            value={formik.values.number}
+            onChange={formik.handleChange}
+            type="number"
+            name="number"
             className="content__search-label-price"
           />
         </div>

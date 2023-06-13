@@ -16,6 +16,8 @@ const SearchHotel = ({ formik, location }) => {
     { name: "4 giường đôi cực lớn", value: 4 },
     { name: "5 giường đôi cực lớn", value: 5 },
   ];
+
+  console.log(location);
   return (
     <>
       <form action="" onSubmit={formik.handleSubmit}>
@@ -27,6 +29,7 @@ const SearchHotel = ({ formik, location }) => {
           id="location"
           name="location"
           options={location}
+          getOptionLabel={(option) => option.name}
           sx={{
             width: "100%",
             "& + .MuiAutocomplete-popper .MuiAutocomplete-option": {
