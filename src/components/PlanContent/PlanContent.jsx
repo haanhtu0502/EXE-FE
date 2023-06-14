@@ -39,6 +39,8 @@ const PlanContent = () => {
   const [type, setType] = useState("flight");
   const [flightResult, setFlightResult] = useState([]);
   const [hotelResult, setHotelResult] = useState([]);
+  const [touristResult, setTouristResult] = useState([]);
+  const [serviceResult, setServiceResult] = useState([]);
 
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
@@ -188,10 +190,10 @@ const PlanContent = () => {
         .then((response) => {
           console.log(response);
           if (response.errorMessage) {
-            setResult([]);
+            setServiceResult([]);
             return;
           }
-          setResult(response.result);
+          setServiceResult(response.result);
         })
         .catch((err) => console.log(err));
     },
@@ -220,10 +222,10 @@ const PlanContent = () => {
         .then((response) => {
           console.log(response);
           if (response.errorMessage) {
-            setResult([]);
+            setTouristResult([]);
             return;
           }
-          setResult(response.result);
+          setTouristResult(response.result);
         })
         .catch((err) => console.log(err));
       console.log(values);
@@ -307,7 +309,7 @@ const PlanContent = () => {
               .then((res) => res.json())
               .then((response) => {
                 console.log(response);
-                setResult(response.result);
+                setServiceResult(response.result);
               })
               .catch((err) => console.log(err));
           };
@@ -335,7 +337,7 @@ const PlanContent = () => {
               .then((res) => res.json())
               .then((response) => {
                 console.log(response);
-                setResult(response.result);
+                setTouristResult(response.result);
               })
               .catch((err) => console.log(err));
           };
@@ -451,7 +453,7 @@ const PlanContent = () => {
           )}
           {type === "tourist" ? (
             <TouristSpot
-              // result={result}
+              result={touristResult}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
             />
@@ -460,7 +462,7 @@ const PlanContent = () => {
           )}
           {type === "service" ? (
             <Service
-              // result={result}
+              result={serviceResult}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
             />
