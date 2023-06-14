@@ -1,31 +1,122 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlane } from "@fortawesome/free-solid-svg-icons";
 import Arrow from "../../assets/Arrow.png";
 import "./InnetaryFlight.scss";
+import { format } from "date-fns";
+import { updateInnetary } from "../../feature/innetarySlice";
+import { useDispatch } from "react-redux";
+import MuiAlert from "@mui/material/Alert";
+import { Snackbar } from "@mui/material";
 
-const InnetaryFlight = () => {
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+const InnetaryFlight = ({ item, planInfo, setPlanInfo }) => {
+  const dispatch = useDispatch();
+
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+  });
+
+  const { open, vertical, horizontal } = openSnackbar;
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({ ...openSnackbar, open: false });
+  };
+
+  const handleDelete = () => {
+    setOpenSnackbar({ ...openSnackbar, open: true });
+    fetch(
+      `https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}/Flight`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((response) => {
+        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+          .then((res) => res.json())
+          .then((response) => {
+            console.log(response);
+            setPlanInfo(response.result);
+            let itenary = JSON.parse(localStorage.getItem("itenary"));
+            itenary = { ...itenary, price: response.result.price };
+            localStorage.setItem("itenary", JSON.stringify(itenary));
+            const action = updateInnetary();
+            dispatch(action);
+
+            // setLoading(false);
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
-    <div style={{ marginBottom: 0 }} className="flight__item">
+    <div key={item.id} className="flight__item">
       <div className="flight__item-header">
         <FontAwesomeIcon icon={faPlane} />
-        <h3 className="flight__item-header-date">25/06/2023</h3>
-        <h3 className="flight__item-header-seat">4 người</h3>
+        <h3 className="flight__item-header-date">
+          {format(new Date(item.date), "dd/MM/yyyy")}
+        </h3>
+        <h3 className="flight__item-header-seat">
+          {item.numberOfSeats} chỗ ngồi
+        </h3>
       </div>
       <div className="flight__item-content">
-        <div className="flight__item-content-brand">VietJet Aviation</div>
+        <div className="flight__item-content-brand">{item.brandName}</div>
         <div className="flight__item-content-departure">
-          <h3 className="flight__item-content-departure-time">05:30</h3>
-          <h3 className="flight__item-content-departure-location">TP.HCM</h3>
+          <h3 className="flight__item-content-departure-time">
+            {item.startTime.slice(0, -3)}
+          </h3>
+          <h3 className="flight__item-content-departure-location">
+            {item.destinationFromName}
+          </h3>
         </div>
         <img className="flight__item-content-img" src={Arrow} alt="" />
         <div className="flight__item-content-departure">
-          <h3 className="flight__item-content-departure-time">07:40</h3>
-          <h3 className="flight__item-content-departure-location">Hà Nội </h3>
+          <h3 className="flight__item-content-departure-time">
+            {item.endTime.slice(0, -3)}
+          </h3>
+          <h3 className="flight__item-content-departure-location">
+            {item.destinationToName}
+          </h3>
         </div>
-        <h3 className="flight__item-content-price">2.000.000</h3>
-        <button className="flight__item-content-button">Xóa</button>
+        <h3 className="flight__item-content-price">
+          {item.price.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          })}
+        </h3>
+        <button onClick={handleDelete} className="flight__item-content-button">
+          Xóa
+        </button>
       </div>
+      <Snackbar
+        open={open}
+        autoHideDuration={1000}
+        anchorOrigin={{ vertical, horizontal }}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{
+            width: "100%",
+            fontSize: "15px",
+            alignItem: "center",
+          }}
+        >
+          Đã xóa thành công
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

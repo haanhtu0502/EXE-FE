@@ -32,11 +32,11 @@ const Login = () => {
   const googleAuth = () => {
     try {
       signInWithPopup(auth, googleProvider).then((data) => {
-        console.log(data);
         const {
           user: { providerData },
         } = data;
         const action = login(providerData[0]);
+        console.log(providerData[0]);
         dispatch(action);
         localStorage.setItem("user", JSON.stringify(providerData[0]));
         navigate("/");
@@ -50,16 +50,19 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
 
-    fetch(`https://guidi.azurewebsites.net/api/User/Login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
+    fetch(
+      `https://guidi.azurewebsites.net/api/User/Login?email=${email}&password=${password}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // body: JSON.stringify({
+        //   email: email,
+        //   password: password,
+        // }),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -87,6 +90,7 @@ const Login = () => {
         user: { providerData },
       } = data;
       const action = login(providerData[0]);
+      console.log(providerData[0]);
       dispatch(action);
       localStorage.setItem("user", JSON.stringify(providerData[0]));
       navigate("/");

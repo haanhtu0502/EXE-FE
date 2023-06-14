@@ -37,12 +37,12 @@ const Flight = ({
 
   const { open, vertical, horizontal } = openWarningSnackbar;
   const handleCloseWarningSnackbar = () => {
-    setOpenWarningSnackbar({ ...openSnackbar, open: false });
+    setOpenWarningSnackbar({ ...openWarningSnackbar, open: false });
   };
 
   const handleClickAdd = (flightId) => {
     if (planInfo.flight) {
-      setOpenWarningSnackbar({ ...openSnackbar, open: true });
+      setOpenWarningSnackbar({ ...openWarningSnackbar, open: true });
       return;
     }
     fetch(

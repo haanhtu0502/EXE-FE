@@ -9,16 +9,70 @@ import { format } from "date-fns";
 import React, { useState } from "react";
 import { DateRange } from "react-date-range";
 import "./InnetaryHotel.scss";
+import { updateInnetary } from "../../feature/innetarySlice";
+import { useDispatch } from "react-redux";
+import MuiAlert from "@mui/material/Alert";
+import { Snackbar } from "@mui/material";
 
-const InnetaryHotel = () => {
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+const InnetaryHotel = ({ item, planInfo, setPlanInfo }) => {
+  console.log(planInfo);
   const [dates, setDates] = useState([
     {
-      startDate: null,
-      endDate: "15/06/2023",
+      startDate: new Date(item.checkInDate),
+      endDate: new Date(item.checkOutDate),
       key: "selection",
     },
   ]);
   const [openDate, setOpenDate] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+    feature: "",
+  });
+
+  const { open, feature, vertical, horizontal } = openSnackbar;
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({ ...openSnackbar, open: false });
+  };
+
+  const handleDelete = () => {
+    setOpenSnackbar({ ...openSnackbar, open: true, feature: "Xóa" });
+    fetch(
+      `https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}/Hotel`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((response) => {
+        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+          .then((res) => res.json())
+          .then((response) => {
+            console.log(response);
+            setPlanInfo(response.result);
+            let itenary = JSON.parse(localStorage.getItem("itenary"));
+            itenary = { ...itenary, price: response.result.price };
+            localStorage.setItem("itenary", JSON.stringify(itenary));
+            const action = updateInnetary();
+            dispatch(action);
+
+            // setLoading(false);
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <div className="innetary__hotel-container">
       <div className="travelplanner__container-form-inputcontrol innetary__inputcontrol date-range">
@@ -48,7 +102,7 @@ const InnetaryHotel = () => {
           )}`}</div>
         )}
 
-        {openDate && (
+        {/* {openDate && (
           <DateRange
             editableDateInputs={true}
             onChange={(item) => {
@@ -60,56 +114,97 @@ const InnetaryHotel = () => {
             className="date"
             minDate={new Date()}
           />
-        )}
+        )} */}
       </div>
-      <div style={{ marginBottom: 0 }} className="hotel__item">
+      <div key={item.id} className="hotel__item">
         <div className="hotel__item-header">
           <FontAwesomeIcon icon={faHotel} />
         </div>
         <div className="hotel__item-content">
           <img
             className="hotel__item-content-img"
-            src="https://cf.bstatic.com/xdata/images/hotel/square200/388870170.webp?k=802120b5dadf788858e0e40abead6f03673d79b46329b84a1645fe1971613a44&o="
+            src={`https://drive.google.com/uc?export=view&id=${item.image}`}
             alt=""
           />
+
           <div className="hotel__item-content-info">
             <div className="hotel__item-content-info-header">
               <h3 className="hotel__item-content-info-header-name">
-                Riu Plaza Espana
+                {item.hotelName}
               </h3>
               <div className="hotel__item-content-info-header-star">
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
-                <FontAwesomeIcon icon={faStar} />
+                {Math.round(item.rating) === 1 && (
+                  <FontAwesomeIcon icon={faStar} />
+                )}
+                {Math.round(item.rating) === 2 && (
+                  <>
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                  </>
+                )}
+                {Math.round(item.rating) === 3 && (
+                  <>
+                    {" "}
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                  </>
+                )}
+                {Math.round(item.rating) === 4 && (
+                  <>
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                  </>
+                )}
+                {Math.round(item.rating) === 5 && (
+                  <>
+                    {" "}
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                    <FontAwesomeIcon icon={faStar} />
+                  </>
+                )}
               </div>
             </div>
             <div className="hotel__item-content-info-location">
               <FontAwesomeIcon icon={faLocationPin} />
               <h6 className="hotel__item-content-info-location-address">
-                Khách sạn ở Hà Nội
+                {item.address}
               </h6>
             </div>
             <p className="hotel__item-content-info-desc">
-              Nằm ở trung tâm thành phố Hà Nội, Riu Plaza España có phòng nghỉ
-              gắn máy điều hòa, nhà hàng, WiFi miễn phí và quầy bar. Khách sạn 4
-              sao này cung cấp dịch vụ phòng và dịch vụ trợ giúp đặc biệt
+              Nằm ở trung tâm thành phố {item.locationName},{item.hotelName} có
+              phòng nghỉ gắn máy điều hòa, nhà hàng, WiFi miễn phí và quầy bar.
+              Khách sạn {Math.round(item.rating)} sao này cung cấp dịch vụ phòng
+              và dịch vụ trợ giúp đặc biệt
+              {/* {item.description} */}
             </p>
 
             <div className="hotel__item-content-info-bottom">
               <div className="hotel__item-content-info-bottom-room">
                 <h3 className="hotel__item-content-info-bottom-room-name">
-                  Phòng cổ điển có giường cỡ King
+                  {item.roomType === "Deluxe" && "Phòng hạng sang"}
+                  {item.roomType === "Standard" && "Phòng tiêu chuẩn"}
                 </h3>
                 <h3 className="hotel__item-content-info-bottom-room-type">
-                  1 giường đôi cực lớn
+                  {item.roomName}
                 </h3>
               </div>
               <div className="hotel__item-content-info-bottom-feature">
                 <h3 className="hotel__item-content-info-bottom-feature-price">
-                  1.000.000 VNĐ
+                  {item.price.toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
                 </h3>
-                <button className="hotel__item-content-info-bottom-feature-button">
+                <button
+                  onClick={handleDelete}
+                  className="hotel__item-content-info-bottom-feature-button"
+                >
                   Xóa
                 </button>
               </div>
@@ -117,6 +212,24 @@ const InnetaryHotel = () => {
           </div>
         </div>
       </div>
+      <Snackbar
+        open={open}
+        autoHideDuration={1000}
+        anchorOrigin={{ vertical, horizontal }}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{
+            width: "100%",
+            fontSize: "15px",
+            alignItem: "center",
+          }}
+        >
+          Đã {feature} thành công
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

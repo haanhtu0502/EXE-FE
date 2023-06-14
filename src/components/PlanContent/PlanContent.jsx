@@ -82,7 +82,6 @@ const PlanContent = () => {
   const [location, setLocation] = useState([]);
 
   const [loading, setLoading] = useState(false);
-  console.log(planInfo);
 
   useEffect(() => {
     setLoading(true);
@@ -243,7 +242,6 @@ const PlanContent = () => {
             )
               .then((res) => res.json())
               .then((response) => {
-                console.log(response);
                 if (response.errorMessage) {
                   setHotelResult([]);
                   return;
@@ -394,7 +392,11 @@ const PlanContent = () => {
         open={openModal}
         onClose={handleCloseModal}
       >
-        <ModalPlanner handleClose={handleCloseModal} />
+        <ModalPlanner
+          setPlanInfo={setPlanInfo}
+          planInfo={planInfo}
+          handleClose={handleCloseModal}
+        />
       </Modal>
 
       <Snackbar
