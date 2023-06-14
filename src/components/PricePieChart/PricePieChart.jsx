@@ -2,10 +2,10 @@ import React from "react";
 import { PieChart, Pie, Cell } from "recharts";
 import "./PricePieChart.scss";
 
-const PricePieChart = () => {
+const PricePieChart = ({ price, budget }) => {
   const DATA = [
-    { name: "Đã tiêu", value: 2000 },
-    { name: "Còn lại", value: 3000 },
+    { name: "Đã tiêu", value: price },
+    { name: "Còn lại", value: budget - price },
   ];
   const COLORS = ["#0088FE", "#00C49F"];
   const RADIAN = Math.PI / 180;
@@ -27,11 +27,14 @@ const PricePieChart = () => {
         x={x}
         y={y}
         fill="white"
-        fontSize={20}
+        fontSize={11}
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {value}
+        {value.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        })}
       </text>
     );
   };
@@ -63,7 +66,13 @@ const PricePieChart = () => {
           ))}
         </Pie>
       </PieChart>
-      <h1>Ngân sách : 5.000.000 VNĐ</h1>
+      <h1>
+        Ngân sách :{" "}
+        {budget.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        })}
+      </h1>
     </div>
   );
 };

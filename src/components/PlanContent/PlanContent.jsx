@@ -37,14 +37,16 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const PlanContent = () => {
   const [type, setType] = useState("flight");
-  const [result, setResult] = useState([]);
+  const [flightResult, setFlightResult] = useState([]);
+  const [hotelResult, setHotelResult] = useState([]);
+
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
-    vertical: "bottom",
-    horizontal: "center",
+    vertical: "top",
+    horizontal: "right",
   });
 
   const { vertical, horizontal } = openSnackbar;
@@ -63,7 +65,10 @@ const PlanContent = () => {
     title,
     endDate,
     startDate,
+    price,
   } = itenary;
+
+  // console.log(itenary);
 
   const [dates, setDates] = useState([
     {
@@ -77,6 +82,7 @@ const PlanContent = () => {
   const [location, setLocation] = useState([]);
 
   const [loading, setLoading] = useState(false);
+  console.log(planInfo);
 
   useEffect(() => {
     setLoading(true);
@@ -130,10 +136,10 @@ const PlanContent = () => {
         .then((response) => {
           console.log(response);
           if (response.errorMessage) {
-            setResult([]);
+            setFlightResult([]);
             return;
           }
-          setResult(response.result);
+          setFlightResult(response.result);
         })
         .catch((err) => console.log(err));
     },
@@ -142,13 +148,26 @@ const PlanContent = () => {
   const hotelFormik = useFormik({
     initialValues: {
       location: { name: destinationName, id: destinationId },
-      rating: { name: "5 sao", value: 5 },
-      roomType: { name: "1 giường đôi cực lớn", value: 1 },
+      rating: { name: "Tất cả", value: "" },
+      roomType: { name: "Tất cả", value: "" },
       minPrice: 0,
       maxPrice: budget,
     },
     onSubmit: (values) => {
       console.log(values);
+      fetch(
+        `https://guidi.azurewebsites.net/api/Hotel?locationid=${values.location.id}&rating=${values.rating.value}&roomType=${values.roomType.value}&minPrice=${values.minPrice}&maxPrice=${values.maxPrice}`
+      )
+        .then((res) => res.json())
+        .then((response) => {
+          console.log(response);
+          if (response.errorMessage) {
+            setHotelResult([]);
+            return;
+          }
+          setHotelResult(response.result);
+        })
+        .catch((err) => console.log(err));
     },
   });
 
@@ -207,15 +226,33 @@ const PlanContent = () => {
             )
               .then((res) => res.json())
               .then((response) => {
-                console.log(response);
-                setResult(response.result);
+                if (response.errorMessage) {
+                  setFlightResult([]);
+                  return;
+                }
+                setFlightResult(response.result);
               })
               .catch((err) => console.log(err));
           };
           fetchFlights();
           break;
         case "hotel":
-          console.log(type);
+          const fetchHotels = () => {
+            fetch(
+              `https://guidi.azurewebsites.net/api/Hotel?locationid=${hotelFormik.values.location.id}&rating=${hotelFormik.values.rating.value}&roomType=${hotelFormik.values.roomType.value}&minPrice=${hotelFormik.values.minPrice}&maxPrice=${hotelFormik.values.maxPrice}`
+            )
+              .then((res) => res.json())
+              .then((response) => {
+                console.log(response);
+                if (response.errorMessage) {
+                  setHotelResult([]);
+                  return;
+                }
+                setHotelResult(response.result);
+              })
+              .catch((err) => console.log(err));
+          };
+          fetchHotels();
           break;
         case "service":
           console.log(type);
@@ -300,7 +337,7 @@ const PlanContent = () => {
               <></>
             )}
           </div>
-          <PricePieChart />
+          <PricePieChart budget={budget} price={price} />
           <button onClick={handleOpenModal} className="content__button">
             Chuyến đi của bạn
           </button>
@@ -308,25 +345,31 @@ const PlanContent = () => {
         <div className="content__flex-right">
           {type === "flight" ? (
             <Flight
-              result={result}
+              result={flightResult}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
+              planId={id}
+              planInfo={planInfo}
+              setPlanInfo={setPlanInfo}
             />
           ) : (
             <></>
           )}
           {type === "hotel" ? (
             <Hotel
-              result={result}
+              result={hotelResult}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
+              planId={id}
+              planInfo={planInfo}
+              setPlanInfo={setPlanInfo}
             />
           ) : (
             <></>
           )}
           {type === "tourist" ? (
             <TouristSpot
-              result={result}
+              // result={result}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
             />
@@ -335,7 +378,7 @@ const PlanContent = () => {
           )}
           {type === "service" ? (
             <Service
-              result={result}
+              // result={result}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
             />

@@ -8,16 +8,14 @@ const SearchHotel = ({ formik, location }) => {
     { name: "3 sao", value: 3 },
     { name: "2 sao", value: 2 },
     { name: "1 sao", value: 1 },
+    { name: "Tất cả", value: "" },
   ];
   const roomType = [
-    { name: "1 giường đôi cực lớn", value: 1 },
-    { name: "2 giường đôi cực lớn", value: 2 },
-    { name: "3 giường đôi cực lớn", value: 3 },
-    { name: "4 giường đôi cực lớn", value: 4 },
-    { name: "5 giường đôi cực lớn", value: 5 },
+    { name: "Phòng tiêu chuẩn", value: "Standard" },
+    { name: "Phòng hạng sang", value: "Deluxe" },
+    { name: "Tiêu chuẩn", value: "" },
   ];
 
-  console.log(location);
   return (
     <>
       <form action="" onSubmit={formik.handleSubmit}>

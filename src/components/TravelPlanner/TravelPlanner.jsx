@@ -92,8 +92,6 @@ const TravelPlanner = () => {
         budget: values.budget,
       };
 
-      const userId = JSON.parse(localStorage.getItem("user"));
-
       fetch("https://guidi.azurewebsites.net/api/Itinerary", {
         method: "POST",
         headers: {
@@ -113,6 +111,7 @@ const TravelPlanner = () => {
             startDate: response.result.startDate,
             endDate: response.result.endDate,
             id: response.result.id,
+            price: 0,
           };
           const action = addInnetary(itenary);
           dispatch(action);

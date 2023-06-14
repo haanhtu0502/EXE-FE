@@ -63,13 +63,13 @@ const Register = () => {
         Phone: values.phone,
         Address: values.address,
       };
-      //
+      //?Username=${values.username}&Password=${values.password}&ConfirmPassword=${values.confirmPassword}&FullName=${values.fullname}&Email=${values.email}&Phone=${values.phone}&Address=${values.address}
       fetch(`https://guidi.azurewebsites.net/api/User/Register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(values),
       })
         .then((res) => res.json())
         .then((response) => {

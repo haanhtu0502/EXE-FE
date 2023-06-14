@@ -12,8 +12,11 @@ const innetary = createSlice({
     addInnetary: (state, action) => {
       state.itenary = action.payload;
     },
+    updateInnetary: (state) => {
+      state.itenary = fetchItenary();
+    },
   },
 });
 
-export const { addInnetary } = innetary.actions;
+export const { addInnetary, updateInnetary } = innetary.actions;
 export default innetary.reducer;
