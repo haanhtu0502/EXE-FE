@@ -159,7 +159,23 @@ const PlanContent = () => {
       maxPrice: budget,
     },
     onSubmit: (values) => {
-      console.log(values);
+      fetch(
+        `https://guidi.azurewebsites.net/api/Service?locationId=${
+          values.location.id
+        }${values.minPrice === "" ? "" : "&minPrice=" + values.minPrice}${
+          values.maxPrice === "" ? "" : "&maxPrice=" + values.maxPrice
+        }`
+      )
+        .then((res) => res.json())
+        .then((response) => {
+          console.log(response);
+          if (response.errorMessage) {
+            setResult([]);
+            return;
+          }
+          setResult(response.result);
+        })
+        .catch((err) => console.log(err));
     },
   });
 
@@ -171,6 +187,27 @@ const PlanContent = () => {
       maxPrice: budget,
     },
     onSubmit: (values) => {
+      fetch(
+        `https://guidi.azurewebsites.net/api/TouristSpot?locationId=${
+          values.location.id
+        }${
+          values.preference.name === "Tất cả"
+            ? ""
+            : "&preferenceIds=" + values.preference.id
+        }${values.minPrice === "" ? "" : "&minPrice=" + values.minPrice}${
+          values.maxPrice === "" ? "" : "&maxPrice=" + values.maxPrice
+        }`
+      )
+        .then((res) => res.json())
+        .then((response) => {
+          console.log(response);
+          if (response.errorMessage) {
+            setResult([]);
+            return;
+          }
+          setResult(response.result);
+        })
+        .catch((err) => console.log(err));
       console.log(values);
     },
   });
@@ -218,9 +255,56 @@ const PlanContent = () => {
           console.log(type);
           break;
         case "service":
-          console.log(type);
+          const fetchServices = () => {
+            fetch(
+              `https://guidi.azurewebsites.net/api/Service?locationId=${
+                serviceFormik.values.location.id
+              }${
+                serviceFormik.values.minPrice === ""
+                  ? ""
+                  : "&minPrice=" + serviceFormik.values.minPrice
+              }${
+                serviceFormik.values.maxPrice === ""
+                  ? ""
+                  : "&maxPrice=" + serviceFormik.values.maxPrice
+              }`
+            )
+              .then((res) => res.json())
+              .then((response) => {
+                console.log(response);
+                setResult(response.result);
+              })
+              .catch((err) => console.log(err));
+          };
+          fetchServices();
           break;
         case "tourist":
+          const fetchTouristSpot = () => {
+            fetch(
+              `https://guidi.azurewebsites.net/api/TouristSpot?locationId=${
+                touristFormik.values.location.id
+              }${
+                touristFormik.values.preference.name === "Tất cả"
+                  ? ""
+                  : "&preferenceIds=" + touristFormik.values.preference.id
+              }${
+                touristFormik.values.minPrice === ""
+                  ? ""
+                  : "&minPrice=" + touristFormik.values.minPrice
+              }${
+                touristFormik.values.maxPrice === ""
+                  ? ""
+                  : "&maxPrice=" + touristFormik.values.maxPrice
+              }`
+            )
+              .then((res) => res.json())
+              .then((response) => {
+                console.log(response);
+                setResult(response.result);
+              })
+              .catch((err) => console.log(err));
+          };
+          fetchTouristSpot();
           console.log(type);
           break;
         default:

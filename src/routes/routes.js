@@ -6,6 +6,7 @@ import Login from "../layouts/AuthLayout/Login/Login";
 import Register from "../layouts/AuthLayout/Register/Register";
 import PlanContent from "../components/PlanContent/PlanContent";
 import Payment from "../components/Payment/Payment";
+import Profile from "../components/Profile/Profile";
 
 const publicRoutes = [
   {
@@ -24,6 +25,7 @@ const publicRoutes = [
   { path: "/login", component: Login, layout: null },
   { path: "/register", component: Register, layout: null },
   { path: "/payment", component: Payment, layout: DefaultLayout },
+  { path: "/profile", component: Profile, layout: DefaultLayout },
 ];
 
 const privateRoutes = [];
