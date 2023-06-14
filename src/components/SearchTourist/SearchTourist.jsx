@@ -1,13 +1,20 @@
 import { Autocomplete, TextField } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const SearchTourist = ({ formik, location }) => {
-  const preference = [
-    { name: "Thiên nhiên", value: 1 },
-    { name: "Lịch sử", value: 2 },
-    { name: "Hoang dã", value: 3 },
-    { name: "Bảo tàng", value: 4 },
-  ];
+  const [preferences, setPreferences] = useState([]);
+
+  useEffect(() => {
+    const fetchPreferencesList = () => {
+      fetch(`https://guidi.azurewebsites.net/api/Preference`)
+        .then((res) => res.json())
+        .then((response) => {
+          setPreferences([...response.result, "Tất cả"]);
+        })
+        .catch((err) => console.log(err));
+    };
+    fetchPreferencesList();
+  }, []);
   return (
     <>
       <form action="" onSubmit={formik.handleSubmit}>
@@ -45,7 +52,7 @@ const SearchTourist = ({ formik, location }) => {
           disablePortal
           id="preference"
           name="preference"
-          options={preference}
+          options={preferences}
           getOptionLabel={(option) => option.name}
           sx={{
             width: "100%",
