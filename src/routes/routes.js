@@ -17,7 +17,8 @@ const publicRoutes = [
   {
     path: "/planner/plan",
     component: PlanContent,
-    PlanContent: DefaultLayout,
+    layout: DefaultLayout,
+    private: true,
   },
   { path: "/blog", component: Blog, layout: DefaultLayout },
   { path: "/tourguide", component: TourGuide, layout: DefaultLayout },
