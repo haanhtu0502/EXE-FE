@@ -4,8 +4,11 @@ import { publicRoutes } from "./routes/routes";
 import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
 import { Fragment } from "react";
 import PrivateRoute from "./routes/PrivateRoute";
+import { useSelector } from "react-redux";
 
 function App() {
+  const user = useSelector((state) => state.user.user);
+  const innetary = useSelector((state) => state.innetary.itenary);
   return (
     <Router>
       <div className="App">
@@ -21,17 +24,17 @@ function App() {
             }
 
             return route.private ? (
-              <Route element={<PrivateRoute />}>
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <PrivateRoute>
                     <Layout>
                       <Page />
                     </Layout>
-                  }
-                />
-              </Route>
+                  </PrivateRoute>
+                }
+              />
             ) : (
               <Route
                 key={index}
