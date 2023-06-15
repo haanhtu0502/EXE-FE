@@ -5,6 +5,7 @@ import InnetaryHotel from "../InnetaryHotel/InnetaryHotel";
 import Empty from "../../assets/search-empty.png";
 import { useNavigate } from "react-router";
 import InnetaryService from "../InnetaryService/InnetaryService";
+import InnetaryTouristSpot from "../InnetaryTouristSpot/InnetaryTouristSpot";
 
 const ModalPlanner = ({ handleClose, planInfo, setPlanInfo }) => {
   const navigate = useNavigate();
@@ -39,11 +40,36 @@ const ModalPlanner = ({ handleClose, planInfo, setPlanInfo }) => {
       )}
 
       <h3 className="innetary__title">Dịch vụ</h3>
-      <InnetaryService />
+      {planInfo.plannedServices.length === 0 ? (
+        <div className="search-empty">
+          <img src={Empty} alt="" />
+        </div>
+      ) : (
+        planInfo.plannedServices.map((item) => (
+          <InnetaryService
+            setPlanInfo={setPlanInfo}
+            planInfo={planInfo}
+            item={item.service}
+            plannedService={item}
+          />
+        ))
+      )}
+
       <h3 className="innetary__title">Địa điểm du lịch</h3>
-      <div className="search-empty">
-        <img src={Empty} alt="" />
-      </div>
+      {planInfo.plannedSpots.length === 0 ? (
+        <div className="search-empty">
+          <img src={Empty} alt="" />
+        </div>
+      ) : (
+        planInfo.plannedSpots.map((item) => (
+          <InnetaryTouristSpot
+            setPlanInfo={setPlanInfo}
+            planInfo={planInfo}
+            item={item.spot}
+            plannedSpot={item}
+          />
+        ))
+      )}
       <div className="innetary__buttons">
         <button onClick={handleClose} className="innetary__button">
           Đóng

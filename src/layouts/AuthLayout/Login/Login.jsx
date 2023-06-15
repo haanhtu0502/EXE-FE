@@ -101,7 +101,9 @@ const Login = () => {
     <div>
       <div className="login-content_container">
         <div className="left_content">
-          <img className="left_content-logo" src={logo} alt="" />
+          <Link to="/">
+            <img className="left_content-logo" src={logo} alt="" />
+          </Link>
           <p>
             Tìm kiếm niềm vui và khám phá những điều mới lạ mà bạn <br />
             chưa từng được trải nghiệm

@@ -26,7 +26,12 @@ const publicRoutes = [
   { path: "/login", component: Login, layout: null },
   { path: "/register", component: Register, layout: null },
   { path: "/payment", component: Payment, layout: DefaultLayout },
-  { path: "/profile", component: Profile, layout: DefaultLayout },
+  {
+    path: "/profile",
+    component: Profile,
+    layout: DefaultLayout,
+    private: true,
+  },
 ];
 
 const privateRoutes = [];

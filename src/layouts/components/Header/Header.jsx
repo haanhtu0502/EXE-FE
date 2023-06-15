@@ -58,8 +58,10 @@ const Header = () => {
   return (
     <div className="header__container">
       <div className="header__nav">
-        <img className="header__nav-logo" src={Logo} alt="Logo" />
-        <nav className="header__nav-tab">
+        <Link to="/">
+          <img className="header__nav-logo" src={Logo} alt="Logo" />
+        </Link>
+        {/* <nav className="header__nav-tab">
           <ul className="header__nav-list">
             {headerNav.map((item, i) => (
               <li
@@ -70,7 +72,7 @@ const Header = () => {
               </li>
             ))}
           </ul>
-        </nav>
+        </nav> */}
         <div className="header__nav-feature">
           <Button
             className="header__nav-feature-icon"

@@ -8,10 +8,73 @@ import {
   faList,
 } from "@fortawesome/free-solid-svg-icons";
 import Empty from "../../assets/search-empty.png";
+import { useDispatch } from "react-redux";
+import { updateInnetary } from "../../feature/innetarySlice";
+import MuiAlert from "@mui/material/Alert";
+import { useState } from "react";
+import { Snackbar } from "@mui/material";
 
-const TouristSpot = ({ result, setOpenSnackbar, openSnackbar }) => {
-  const handleClickAdd = () => {
-    setOpenSnackbar({ ...openSnackbar, open: true });
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+const TouristSpot = ({
+  result,
+  setOpenSnackbar,
+  openSnackbar,
+  planId,
+  planInfo,
+  setPlanInfo,
+}) => {
+  const dispatch = useDispatch();
+
+  const [openWarningSnackbar, setOpenWarningSnackbar] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+  });
+
+  const { open, vertical, horizontal } = openWarningSnackbar;
+
+  const handleCloseWarningSnackbar = () => {
+    setOpenWarningSnackbar({ ...openWarningSnackbar, open: false });
+  };
+
+  const handleClickAdd = (spotId) => {
+    const data = {
+      itineraryId: planId,
+      spotId: spotId,
+    };
+
+    fetch(`https://guidi.azurewebsites.net/api/Itinerary/TouristSpot`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        console.log(response);
+        if (response.errorMessage) {
+          setOpenWarningSnackbar({ ...openWarningSnackbar, open: true });
+          return;
+        }
+        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+          .then((res) => res.json())
+          .then((response) => {
+            setPlanInfo(response.result);
+            let itenary = JSON.parse(localStorage.getItem("itenary"));
+            itenary = { ...itenary, price: response.result.price };
+            localStorage.setItem("itenary", JSON.stringify(itenary));
+            const action = updateInnetary();
+            dispatch(action);
+            // setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <div className="tourist__container">
@@ -73,13 +136,34 @@ const TouristSpot = ({ result, setOpenSnackbar, openSnackbar }) => {
               </h4>
             </div>
             <div className="tourist__detail-button">
-              <button onClick={handleClickAdd} className="tourist__add-button">
+              <button
+                onClick={() => handleClickAdd(item.id)}
+                className="tourist__add-button"
+              >
                 Thêm
               </button>
             </div>
           </div>
         ))
       )}
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical, horizontal }}
+        onClose={handleCloseWarningSnackbar}
+      >
+        <Alert
+          onClose={handleCloseWarningSnackbar}
+          severity="error"
+          sx={{
+            width: "100%",
+            fontSize: "15px",
+            alignItem: "center",
+          }}
+        >
+          Du lịch này đã có trong lịch trình rồi
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

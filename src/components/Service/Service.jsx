@@ -6,10 +6,72 @@ import {
   faLocationPin,
 } from "@fortawesome/free-solid-svg-icons";
 import Empty from "../../assets/search-empty.png";
+import { useDispatch } from "react-redux";
+import { updateInnetary } from "../../feature/innetarySlice";
+import MuiAlert from "@mui/material/Alert";
+import { useState } from "react";
+import { Snackbar } from "@mui/material";
 
-const Service = ({ result, setOpenSnackbar, openSnackbar }) => {
-  const handleClickAdd = () => {
-    setOpenSnackbar({ ...openSnackbar, open: true });
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+const Service = ({
+  result,
+  setOpenSnackbar,
+  openSnackbar,
+  planId,
+  planInfo,
+  setPlanInfo,
+}) => {
+  const dispatch = useDispatch();
+
+  const [openWarningSnackbar, setOpenWarningSnackbar] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+  });
+
+  const { open, vertical, horizontal } = openWarningSnackbar;
+  const handleCloseWarningSnackbar = () => {
+    setOpenWarningSnackbar({ ...openWarningSnackbar, open: false });
+  };
+
+  const handleClickAdd = (serviceId) => {
+    const data = {
+      itineraryId: planId,
+      serviceId: serviceId,
+    };
+
+    fetch(`https://guidi.azurewebsites.net/api/Itinerary/Service`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        console.log(response);
+        if (response.errorMessage) {
+          setOpenWarningSnackbar({ ...openWarningSnackbar, open: true });
+          return;
+        }
+        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+          .then((res) => res.json())
+          .then((response) => {
+            setPlanInfo(response.result);
+            let itenary = JSON.parse(localStorage.getItem("itenary"));
+            itenary = { ...itenary, price: response.result.price };
+            localStorage.setItem("itenary", JSON.stringify(itenary));
+            const action = updateInnetary();
+            dispatch(action);
+            // setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true });
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <div className="service__container">
@@ -58,13 +120,34 @@ const Service = ({ result, setOpenSnackbar, openSnackbar }) => {
               </h4>
             </div>
             <div className="service__detail-button">
-              <button onClick={handleClickAdd} className="service__add-button">
+              <button
+                onClick={() => handleClickAdd(item.id)}
+                className="service__add-button"
+              >
                 Thêm
               </button>
             </div>
           </div>
         ))
       )}
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical, horizontal }}
+        onClose={handleCloseWarningSnackbar}
+      >
+        <Alert
+          onClose={handleCloseWarningSnackbar}
+          severity="error"
+          sx={{
+            width: "100%",
+            fontSize: "15px",
+            alignItem: "center",
+          }}
+        >
+          Dịch vụ này đã có trong lịch trình rồi
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

@@ -96,7 +96,12 @@ const Footer = () => {
           2022-2023 Guidi. All Rights Reserved
         </p>
         <div className="footer__lower-socials">
-          <img src={Facebook} alt="" />
+          <a
+            href="https://www.facebook.com/profile.php?id=100092600456876"
+            target="_blank"
+          >
+            <img src={Facebook} alt="" />
+          </a>
           <img src={Twitter} alt="" />
           <img src={Instagram} alt="" />
         </div>

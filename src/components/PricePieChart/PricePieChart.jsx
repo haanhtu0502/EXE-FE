@@ -57,7 +57,7 @@ const PricePieChart = ({ price, budget }) => {
           labelLine={false}
           label={renderCustomizedLabel}
           fontSize={20}
-          outerRadius={120}
+          outerRadius={150}
           fill="#8884d8"
           dataKey="value"
         >
@@ -66,7 +66,7 @@ const PricePieChart = ({ price, budget }) => {
           ))}
         </Pie>
       </PieChart>
-      <h1>
+      <h1 className="budget">
         Ngân sách :{" "}
         {budget.toLocaleString("vi-VN", {
           style: "currency",

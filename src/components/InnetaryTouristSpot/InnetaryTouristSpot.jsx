@@ -1,10 +1,12 @@
 import {
-  faHandsHolding,
+  faBookOpen,
+  faList,
   faLocationPin,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
-import "./InnetaryService.scss";
+import "./InnetaryTouristSpot.scss";
 import {
   DatePicker,
   LocalizationProvider,
@@ -22,7 +24,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
+const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
   const [date, setDate] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -43,21 +45,15 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
   const handleSave = () => {
     setOpenSnackbar({ ...openSnackbar, open: true, feature: "lưu" });
 
-    const DateTimeFormated = {
+    const data = {
+      itineraryId: planInfo.id,
+      spotId: item.id,
       date: format(date, "yyyy-MM-dd"),
       startTime: format(startTime, "HH:mm:ss"),
       endTime: format(endTime, "HH:mm:ss"),
     };
 
-    const data = {
-      itineraryId: planInfo.id,
-      serviceId: item.id,
-      date: DateTimeFormated.date,
-      startTime: DateTimeFormated.startTime,
-      endTime: DateTimeFormated.endTime,
-    };
-
-    fetch(`https://guidi.azurewebsites.net/api/Itinerary/Service`, {
+    fetch(`https://guidi.azurewebsites.net/api/Itinerary/TouristSpot`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +82,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
   const handleDelete = () => {
     setOpenSnackbar({ ...openSnackbar, open: true, feature: "xóa" });
     fetch(
-      `https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}/Service/${item.id}`,
+      `https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}/TouristSpot/${item.id}`,
       {
         method: "DELETE",
         headers: {
@@ -120,7 +116,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
           <h2>Ngày :</h2>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              value={dayjs(plannedService.date)}
+              value={dayjs(plannedSpot.date)}
               onChange={(value) => {
                 setDate(value.$d);
               }}
@@ -131,7 +127,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
           <h2>Thời gian bắt đầu :</h2>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
-              value={plannedService.startTime}
+              value={startTime}
               onChange={(value) => {
                 setStartTime(value.$d);
               }}
@@ -142,7 +138,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
           <h2>Thời gian kết thúc :</h2>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
-              value={plannedService.endTime}
+              value={endTime}
               onChange={(value) => {
                 setEndTime(value.$d);
               }}
@@ -155,37 +151,50 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
         </button>
       </div>
 
-      <div className="service__container">
-        <div className="service__item">
-          <div className="service__header">
+      <div className="tourist__container">
+        <div className="tourist__item">
+          <div className="tourist__header">
             <FontAwesomeIcon
-              icon={faHandsHolding}
+              icon={faBookOpen}
               size="lg"
-              className="service__header-icon"
+              className="tourist__header-icon"
             />
           </div>
-          <div className="service__body">
-            <div className="service__body-left">
-              <div className="service__image">
+          <div className="tourist__body">
+            <div className="tourist__body-left">
+              <div className="tourist__image">
                 <img
                   width="250px"
                   src={`https://drive.google.com/uc?export=view&id=${item.image}`}
                   alt=""
                 />
               </div>
+              <div className="tourist__categories">
+                <h5>
+                  <FontAwesomeIcon icon={faList} /> {item.preferenceName}
+                </h5>
+              </div>
             </div>
-            <div className="service__body-right">
-              <div className="service__title">
-                <h2>{item.name}</h2>
-
+            <div className="tourist__body-right">
+              <div className="tourist__title">
+                <div className="tourist__title-info">
+                  <h2>{item.name}</h2>
+                  <h4>
+                    {item.rating}{" "}
+                    <FontAwesomeIcon
+                      className="tourist__iconStar"
+                      icon={faStar}
+                    />
+                  </h4>
+                </div>
                 <h6>
                   <FontAwesomeIcon icon={faLocationPin} /> {item.address}
                 </h6>
               </div>
-              <div className="service__desc">{item.description}</div>
+              <div className="tourist__desc">{item.description}</div>
             </div>
           </div>
-          <div className="service__price">
+          <div className="tourist__price">
             <h4>
               {item.price.toLocaleString("vi-VN", {
                 style: "currency",
@@ -193,8 +202,8 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
               })}
             </h4>
           </div>
-          <div className="service__detail-button">
-            <button onClick={handleDelete} className="service__add-button">
+          <div className="tourist__detail-button">
+            <button onClick={handleDelete} className="tourist__add-button">
               Xóa
             </button>
           </div>
@@ -222,4 +231,4 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
   );
 };
 
-export default InnetaryService;
+export default InnetaryTouristSpot;

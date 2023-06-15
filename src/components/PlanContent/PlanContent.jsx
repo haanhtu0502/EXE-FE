@@ -453,6 +453,9 @@ const PlanContent = () => {
           )}
           {type === "tourist" ? (
             <TouristSpot
+              planId={id}
+              planInfo={planInfo}
+              setPlanInfo={setPlanInfo}
               result={touristResult}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
@@ -462,6 +465,9 @@ const PlanContent = () => {
           )}
           {type === "service" ? (
             <Service
+              planId={id}
+              planInfo={planInfo}
+              setPlanInfo={setPlanInfo}
               result={serviceResult}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
