@@ -26,6 +26,7 @@ const Flight = ({
   planId,
   planInfo,
   setPlanInfo,
+  setOpenBudgetModal,
 }) => {
   const dispatch = useDispatch();
 
@@ -40,7 +41,11 @@ const Flight = ({
     setOpenWarningSnackbar({ ...openWarningSnackbar, open: false });
   };
 
-  const handleClickAdd = (flightId) => {
+  const handleClickAdd = (flightId, price) => {
+    if (price > planInfo.budget - planInfo.price) {
+      setOpenBudgetModal(true);
+      return;
+    }
     if (planInfo.flight) {
       setOpenWarningSnackbar({ ...openWarningSnackbar, open: true });
       return;
@@ -118,7 +123,7 @@ const Flight = ({
                 })}
               </h3>
               <button
-                onClick={() => handleClickAdd(item.id)}
+                onClick={() => handleClickAdd(item.id, item.price)}
                 className="flight__item-content-button"
               >
                 Thêm

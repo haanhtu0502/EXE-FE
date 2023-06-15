@@ -23,6 +23,7 @@ const Hotel = ({
   planId,
   planInfo,
   setPlanInfo,
+  setOpenBudgetModal,
 }) => {
   const dispatch = useDispatch();
 
@@ -38,7 +39,12 @@ const Hotel = ({
     setOpenWarningSnackbar({ ...openSnackbar, open: false });
   };
 
-  const handleClickAdd = (hotelId) => {
+  const handleClickAdd = (hotelId, price) => {
+    debugger;
+    if (price > planInfo.budget - planInfo.price) {
+      setOpenBudgetModal(true);
+      return;
+    }
     if (planInfo.hotel) {
       setOpenWarningSnackbar({ ...openSnackbar, open: true });
       return;
@@ -166,7 +172,7 @@ const Hotel = ({
                       })}
                     </h3>
                     <button
-                      onClick={() => handleClickAdd(item.id)}
+                      onClick={() => handleClickAdd(item.id, item.price)}
                       className="hotel__item-content-info-bottom-feature-button"
                     >
                       Thêm
