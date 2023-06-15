@@ -30,6 +30,7 @@ import SearchHotel from "../SearchHotel/SearchHotel";
 import SearchService from "../SearchService/SearchService";
 import SearchTourist from "../SearchTourist/SearchTourist";
 import { useParams } from "react-router";
+import ModalEditBudget from "../ModalEditBudget/ModalEditBudget";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -45,6 +46,10 @@ const PlanContent = () => {
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+
+  const [openBudgetModal, setOpenBudgetModal] = React.useState(false);
+  const handleOpenBudgetModal = () => setOpenBudgetModal(true);
+  const handleCloseBudgetModal = () => setOpenBudgetModal(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
     vertical: "top",
@@ -55,6 +60,16 @@ const PlanContent = () => {
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar({ ...openSnackbar, open: false });
+  };
+
+  const [openBudgetSnackbar, setOpenBudgetSnackbar] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+  });
+
+  const handleCloseBudgetSnackbar = () => {
+    setOpenBudgetSnackbar({ ...openBudgetSnackbar, open: false });
   };
 
   const itenary = useSelector((state) => state.innetary.itenary);
@@ -429,6 +444,7 @@ const PlanContent = () => {
         <div className="content__flex-right">
           {type === "flight" ? (
             <Flight
+              setOpenBudgetModal={setOpenBudgetModal}
               result={flightResult}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
@@ -441,6 +457,7 @@ const PlanContent = () => {
           )}
           {type === "hotel" ? (
             <Hotel
+              setOpenBudgetModal={setOpenBudgetModal}
               result={hotelResult}
               openSnackbar={openSnackbar}
               setOpenSnackbar={setOpenSnackbar}
@@ -485,6 +502,23 @@ const PlanContent = () => {
         />
       </Modal>
 
+      <Modal
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        open={openBudgetModal}
+        onClose={handleCloseBudgetModal}
+      >
+        <ModalEditBudget
+          openBudgetSnackbar={openBudgetSnackbar}
+          setOpenBudgetSnackbar={setOpenBudgetSnackbar}
+          setPlanInfo={setPlanInfo}
+          planInfo={planInfo}
+          budget={budget}
+          price={price}
+          handleClose={handleCloseBudgetModal}
+        />
+      </Modal>
+
       <Snackbar
         open={openSnackbar.open}
         autoHideDuration={1000}
@@ -501,6 +535,27 @@ const PlanContent = () => {
           }}
         >
           Đã thêm vào chuyến đi của bạn
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openBudgetSnackbar.open}
+        autoHideDuration={3000}
+        anchorOrigin={{
+          vertical: openBudgetSnackbar.vertical,
+          horizontal: openBudgetSnackbar.horizontal,
+        }}
+        onClose={handleCloseBudgetSnackbar}
+      >
+        <Alert
+          onClose={handleCloseBudgetSnackbar}
+          severity="success"
+          sx={{
+            width: "100%",
+            fontSize: "15px",
+            alignItem: "center",
+          }}
+        >
+          Cập nhật thành công
         </Alert>
       </Snackbar>
     </div>

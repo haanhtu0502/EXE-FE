@@ -27,14 +27,17 @@ const PricePieChart = ({ price, budget }) => {
         x={x}
         y={y}
         fill="white"
-        fontSize={11}
+        fontSize={12}
+        fontWeight={600}
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {value.toLocaleString("vi-VN", {
-          style: "currency",
-          currency: "VND",
-        })}
+        {value === 0
+          ? ""
+          : value.toLocaleString("vi-VN", {
+              style: "currency",
+              currency: "VND",
+            })}
       </text>
     );
   };
@@ -44,7 +47,7 @@ const PricePieChart = ({ price, budget }) => {
         <div className="colorInfor-1"></div>
         <h2>: Đã tiêu</h2>
       </div>
-      <div className="flex">
+      <div style={{ marginBottom: "2rem" }} className="flex">
         <div className="colorInfor-2"></div>
         <h2>: Còn lại</h2>
       </div>
@@ -57,7 +60,7 @@ const PricePieChart = ({ price, budget }) => {
           labelLine={false}
           label={renderCustomizedLabel}
           fontSize={20}
-          outerRadius={120}
+          outerRadius={150}
           fill="#8884d8"
           dataKey="value"
         >
@@ -66,7 +69,7 @@ const PricePieChart = ({ price, budget }) => {
           ))}
         </Pie>
       </PieChart>
-      <h1>
+      <h1 style={{ marginTop: "2rem" }}>
         Ngân sách :{" "}
         {budget.toLocaleString("vi-VN", {
           style: "currency",
