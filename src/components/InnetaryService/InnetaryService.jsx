@@ -23,9 +23,27 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
-  const [date, setDate] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
+  const [date, setDate] = useState(
+    plannedService.date ? dayjs(plannedService.date).$d : null
+  );
+  const [startTime, setStartTime] = useState(
+    plannedService.date && plannedService.startTime
+      ? dayjs(
+          format(dayjs(plannedService.date).$d, "yyyy-MM-dd").concat(
+            plannedService.startTime
+          )
+        ).$d
+      : null
+  );
+  const [endTime, setEndTime] = useState(
+    plannedService.date && plannedService.endTime
+      ? dayjs(
+          format(dayjs(plannedService.date).$d, "yyyy-MM-dd").concat(
+            plannedService.endTime
+          )
+        ).$d
+      : null
+  );
   const dispatch = useDispatch();
 
   const [openSnackbar, setOpenSnackbar] = useState({
@@ -118,36 +136,75 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
       <div className="date-time-picker">
         <div className="date-time-picker-component">
           <h2>Ngày :</h2>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              value={dayjs(plannedService.date)}
-              onChange={(value) => {
-                setDate(value.$d);
-              }}
-            />
-          </LocalizationProvider>
+          {plannedService.date ? (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                defaultValue={dayjs(plannedService.date)}
+                onChange={(value) => {
+                  setDate(value.$d);
+                }}
+              />
+            </LocalizationProvider>
+          ) : (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                onChange={(value) => {
+                  setDate(value.$d);
+                }}
+              />
+            </LocalizationProvider>
+          )}
         </div>
         <div className="date-time-picker-component">
           <h2>Thời gian bắt đầu :</h2>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TimePicker
-              value={plannedService.startTime}
-              onChange={(value) => {
-                setStartTime(value.$d);
-              }}
-            />
-          </LocalizationProvider>
+          {plannedService.date && plannedService.startTime ? (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <TimePicker
+                defaultValue={dayjs(
+                  format(dayjs(plannedService.date).$d, "yyyy-MM-dd").concat(
+                    plannedService.startTime
+                  )
+                )}
+                onChange={(value) => {
+                  setStartTime(value.$d);
+                }}
+              />
+            </LocalizationProvider>
+          ) : (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <TimePicker
+                onChange={(value) => {
+                  setStartTime(value.$d);
+                }}
+              />
+            </LocalizationProvider>
+          )}
         </div>
         <div className="date-time-picker-component">
           <h2>Thời gian kết thúc :</h2>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TimePicker
-              value={plannedService.endTime}
-              onChange={(value) => {
-                setEndTime(value.$d);
-              }}
-            />
-          </LocalizationProvider>
+          {plannedService.date && plannedService.endTime ? (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <TimePicker
+                defaultValue={dayjs(
+                  format(dayjs(plannedService.date).$d, "yyyy-MM-dd").concat(
+                    plannedService.endTime
+                  )
+                )}
+                onChange={(value) => {
+                  console.log(value);
+                  setEndTime(value.$d);
+                }}
+              />
+            </LocalizationProvider>
+          ) : (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <TimePicker
+                onChange={(value) => {
+                  setEndTime(value.$d);
+                }}
+              />
+            </LocalizationProvider>
+          )}
         </div>
 
         <button onClick={handleSave} className="date-time-picker-button">

@@ -39,7 +39,6 @@ const ModalEditBudget = ({
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log(response);
         fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
