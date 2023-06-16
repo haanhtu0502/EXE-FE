@@ -58,8 +58,38 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
 
   const { open, vertical, horizontal, feature } = openSnackbar;
 
+  const [openErrorSnackbar, setOpenErrorSnackbar] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+    error: "",
+  });
+
+  const handleCloseErrorSnackbar = () => {
+    setOpenErrorSnackbar({ ...openSnackbar, open: false });
+  };
+
   const handleSave = () => {
     setOpenSnackbar({ ...openSnackbar, open: true, feature: "lưu" });
+
+    if (!date || !startTime || !endTime) {
+      setOpenErrorSnackbar({
+        ...openSnackbar,
+        open: true,
+        error: "Vui lòng nhập đầy đủ",
+      });
+
+      return;
+    }
+
+    if (format(endTime, "HH:mm:ss") < format(startTime, "HH:mm:ss")) {
+      setOpenErrorSnackbar({
+        ...openSnackbar,
+        open: true,
+        error: "Thời điểm kết thúc không thể sớm hơn thời điểm bắt đầu",
+      });
+      return;
+    }
 
     const DateTimeFormated = {
       date: format(date, "yyyy-MM-dd"),
@@ -273,6 +303,28 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
           }}
         >
           Đã {feature} lịch trình
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={openErrorSnackbar.open}
+        autoHideDuration={3000}
+        anchorOrigin={{
+          vertical: openErrorSnackbar.vertical,
+          horizontal: openErrorSnackbar.horizontal,
+        }}
+        onClose={handleCloseErrorSnackbar}
+      >
+        <Alert
+          onClose={handleCloseErrorSnackbar}
+          severity="error"
+          sx={{
+            width: "100%",
+            fontSize: "15px",
+            alignItem: "center",
+          }}
+        >
+          {openErrorSnackbar.error}
         </Alert>
       </Snackbar>
     </div>

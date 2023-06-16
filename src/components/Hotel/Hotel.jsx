@@ -40,7 +40,6 @@ const Hotel = ({
   };
 
   const handleClickAdd = (hotelId, price) => {
-    debugger;
     if (price > planInfo.budget - planInfo.price) {
       setOpenBudgetModal(true);
       return;
