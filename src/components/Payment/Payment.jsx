@@ -1,7 +1,9 @@
 import React from "react";
 import "./Payment.scss";
+import { useSelector } from "react-redux";
 
 const Payment = () => {
+  const itenary = useSelector((state) => state.innetary.itenary);
   return (
     <div className="payment__container">
       <div className="payment__wrapper">
@@ -13,13 +15,16 @@ const Payment = () => {
           <div className="payment__productInfo">
             <div className="payment__productInfo-wrapper">
               <p className="payment__productInfo-label">Tên đơn hàng:</p>
-              <p className="payment__productInfo-value">
-                Chuyến đi của thanh xuân
-              </p>
+              <p className="payment__productInfo-value">{itenary.title}</p>
             </div>
             <div className="payment__productInfo-wrapper">
               <p className="payment__productInfo-label">Giá tiền:</p>
-              <p className="payment__productInfo-value">3.000.000 VNĐ</p>
+              <p className="payment__productInfo-value">
+                {itenary.price.toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
+              </p>
             </div>
             <div className="payment__productInfo-wrapper">
               <p className="payment__productInfo-label">Phí Agency/ Website:</p>
@@ -29,7 +34,15 @@ const Payment = () => {
               <p className="payment__productInfo-label">
                 Tổng số tiền phải thanh toán:
               </p>
-              <p className="payment__productInfo-value">3.450.000 VNĐ</p>
+              <p className="payment__productInfo-value">
+                {(itenary.price + (itenary.price * 15) / 100).toLocaleString(
+                  "vi-VN",
+                  {
+                    style: "currency",
+                    currency: "VND",
+                  }
+                )}
+              </p>
             </div>
           </div>
           <h2>Thông tin liên lạc</h2>

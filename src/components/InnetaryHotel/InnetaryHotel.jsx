@@ -46,7 +46,7 @@ const InnetaryHotel = ({ item, planInfo, setPlanInfo }) => {
   const handleDelete = () => {
     setOpenSnackbar({ ...openSnackbar, open: true, feature: "Xóa" });
     fetch(
-      `https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}/Hotel`,
+      `https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}/Hotel`,
       {
         method: "PUT",
         headers: {
@@ -56,7 +56,7 @@ const InnetaryHotel = ({ item, planInfo, setPlanInfo }) => {
     )
       .then((res) => res.json())
       .then((response) => {
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             console.log(response);

@@ -105,7 +105,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
       endTime: DateTimeFormated.endTime,
     };
 
-    fetch(`https://guidi.azurewebsites.net/api/Itinerary/Service`, {
+    fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/Service`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +114,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
     })
       .then((res) => res.json())
       .then((response) => {
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             setPlanInfo(response.result);
@@ -134,7 +134,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
   const handleDelete = () => {
     setOpenSnackbar({ ...openSnackbar, open: true, feature: "xóa" });
     fetch(
-      `https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}/Service/${item.id}`,
+      `https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}/Service/${item.id}`,
       {
         method: "DELETE",
         headers: {
@@ -144,7 +144,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
     )
       .then((res) => res.json())
       .then((response) => {
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             setPlanInfo(response.result);

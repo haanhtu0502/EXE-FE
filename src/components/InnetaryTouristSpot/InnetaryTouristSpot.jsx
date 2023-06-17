@@ -101,7 +101,7 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
       endTime: format(endTime, "HH:mm:ss"),
     };
 
-    fetch(`https://guidi.azurewebsites.net/api/Itinerary/TouristSpot`, {
+    fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/TouristSpot`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -110,7 +110,7 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
     })
       .then((res) => res.json())
       .then((response) => {
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             setPlanInfo(response.result);
@@ -130,7 +130,7 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
   const handleDelete = () => {
     setOpenSnackbar({ ...openSnackbar, open: true, feature: "xóa" });
     fetch(
-      `https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}/TouristSpot/${item.id}`,
+      `https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}/TouristSpot/${item.id}`,
       {
         method: "DELETE",
         headers: {
@@ -140,7 +140,7 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
     )
       .then((res) => res.json())
       .then((response) => {
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             setPlanInfo(response.result);

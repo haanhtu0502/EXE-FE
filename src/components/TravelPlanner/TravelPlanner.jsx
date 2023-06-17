@@ -92,7 +92,7 @@ const TravelPlanner = () => {
         budget: values.budget,
       };
 
-      fetch("https://guidi.azurewebsites.net/api/Itinerary", {
+      fetch("https://guidiapi.azurewebsites.net/api/Itinerary", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -125,7 +125,7 @@ const TravelPlanner = () => {
   const [location, setLocation] = useState([]);
 
   useEffect(() => {
-    fetch("https://guidi.azurewebsites.net/api/Location")
+    fetch("https://guidiapi.azurewebsites.net/api/Location")
       .then((res) => res.json())
       .then((data) => {
         setLocation(data.result);

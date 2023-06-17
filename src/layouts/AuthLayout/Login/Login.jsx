@@ -51,7 +51,7 @@ const Login = () => {
     setLoading(true);
 
     fetch(
-      `https://guidi.azurewebsites.net/api/User/Login?email=${email}&password=${password}`,
+      `https://guidiapi.azurewebsites.net/api/User/Login?email=${email}&password=${password}`,
       {
         method: "POST",
         headers: {

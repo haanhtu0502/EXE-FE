@@ -46,7 +46,7 @@ const TouristSpot = ({
       spotId: spotId,
     };
 
-    fetch(`https://guidi.azurewebsites.net/api/Itinerary/TouristSpot`, {
+    fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/TouristSpot`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +60,7 @@ const TouristSpot = ({
           setOpenWarningSnackbar({ ...openWarningSnackbar, open: true });
           return;
         }
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             setPlanInfo(response.result);

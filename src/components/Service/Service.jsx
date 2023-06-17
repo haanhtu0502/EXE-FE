@@ -43,7 +43,7 @@ const Service = ({
       serviceId: serviceId,
     };
 
-    fetch(`https://guidi.azurewebsites.net/api/Itinerary/Service`, {
+    fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/Service`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ const Service = ({
           setOpenWarningSnackbar({ ...openWarningSnackbar, open: true });
           return;
         }
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             setPlanInfo(response.result);

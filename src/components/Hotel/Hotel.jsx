@@ -49,7 +49,7 @@ const Hotel = ({
       return;
     }
     fetch(
-      `https://guidi.azurewebsites.net/api/Itinerary/${planId}/Hotel/${hotelId}`,
+      `https://guidiapi.azurewebsites.net/api/Itinerary/${planId}/Hotel/${hotelId}`,
       {
         method: "PUT",
         headers: {
@@ -59,7 +59,7 @@ const Hotel = ({
     )
       .then((res) => res.json())
       .then((response) => {
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             console.log(response);

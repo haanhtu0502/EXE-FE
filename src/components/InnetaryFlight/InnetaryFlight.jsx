@@ -31,7 +31,7 @@ const InnetaryFlight = ({ item, planInfo, setPlanInfo }) => {
   const handleDelete = () => {
     setOpenSnackbar({ ...openSnackbar, open: true });
     fetch(
-      `https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}/Flight`,
+      `https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}/Flight`,
       {
         method: "PUT",
         headers: {
@@ -41,7 +41,7 @@ const InnetaryFlight = ({ item, planInfo, setPlanInfo }) => {
     )
       .then((res) => res.json())
       .then((response) => {
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             console.log(response);

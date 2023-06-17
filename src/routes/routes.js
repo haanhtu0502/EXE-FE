@@ -26,7 +26,12 @@ const publicRoutes = [
   { path: "/tourguide", component: TourGuide, layout: DefaultLayout },
   { path: "/login", component: Login, layout: null },
   { path: "/register", component: Register, layout: null },
-  { path: "/payment", component: Payment, layout: DefaultLayout },
+  {
+    path: "/payment",
+    component: Payment,
+    layout: DefaultLayout,
+    private: true,
+  },
   {
     path: "/profile",
     component: Profile,
