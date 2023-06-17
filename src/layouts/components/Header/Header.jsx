@@ -25,6 +25,7 @@ const Header = () => {
 
   const headerMenuLogined = [
     { display: "Trang cá nhân", to: "/profile" },
+    { display: "Kế hoạch", to: "/planlist" },
     { display: "Chuyến đi", to: "/history" },
     { display: "Trợ giúp", to: "/help" },
     { display: "Đăng xuất", to: "/" },
