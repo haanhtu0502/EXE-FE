@@ -1,0 +1,15 @@
+.planList__container {
+  margin-left: 10rem;
+  margin-top: 5rem;
+  font-size: 18px;
+
+  .planList__header {
+    margin-bottom: 5rem;
+    h1 {
+      font-style: oblique;
+      .service__header-icon {
+        margin-right: 2rem;
+      }
+    }
+  }
+}

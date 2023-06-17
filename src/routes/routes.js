@@ -7,6 +7,7 @@ import Register from "../layouts/AuthLayout/Register/Register";
 import PlanContent from "../components/PlanContent/PlanContent";
 import Payment from "../components/Payment/Payment";
 import Profile from "../components/Profile/Profile";
+import PlanList from "../components/ListPlan/PlanList";
 
 const publicRoutes = [
   {
@@ -29,6 +30,12 @@ const publicRoutes = [
   {
     path: "/profile",
     component: Profile,
+    layout: DefaultLayout,
+    private: true,
+  },
+  {
+    path: "/planlist",
+    component: PlanList,
     layout: DefaultLayout,
     private: true,
   },

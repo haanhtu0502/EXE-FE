@@ -215,7 +215,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
             alignItem: "center",
           }}
         >
-          Đã {feature} lịch trình
+          Đã {feature} dịch vụ thành công
         </Alert>
       </Snackbar>
     </div>

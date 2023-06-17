@@ -224,7 +224,7 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
             alignItem: "center",
           }}
         >
-          Đã {feature} lịch trình
+          Đã {feature} du lịch thành công
         </Alert>
       </Snackbar>
     </div>
