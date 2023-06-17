@@ -15,11 +15,19 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router";
 
 const Profile = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const userInfo = useSelector((state) => state.user.user);
+
+  if (!userInfo) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <div className="profile__container">

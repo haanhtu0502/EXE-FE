@@ -35,11 +35,31 @@ const Login = () => {
         const {
           user: { providerData },
         } = data;
-        const action = login(providerData[0]);
-        console.log(providerData[0]);
-        dispatch(action);
-        localStorage.setItem("user", JSON.stringify(providerData[0]));
-        navigate("/");
+        fetch(
+          `https://guidiapi.azurewebsites.net/api/User/LoginByThirdParty?email=${providerData[0].email}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((response) => {
+            console.log(response);
+            const result = {
+              id: response.usr.id,
+              address: null,
+              email: response.usr.email,
+              fullName: null,
+              phone: null,
+            };
+            const action = login(result);
+            dispatch(action);
+            localStorage.setItem("user", JSON.stringify(result));
+            navigate("/");
+          })
+          .catch((err) => console.log(err));
       });
     } catch (error) {
       console.log(error);
@@ -57,10 +77,6 @@ const Login = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        // body: JSON.stringify({
-        //   email: email,
-        //   password: password,
-        // }),
       }
     )
       .then((res) => res.json())
@@ -73,6 +89,10 @@ const Login = () => {
         } else {
           const result = {
             id: data.result.id,
+            address: data.result.address,
+            email: data.result.email,
+            fullName: data.result.fullName,
+            phone: data.result.phone,
           };
           const action = login(result);
           dispatch(action);
@@ -89,104 +109,122 @@ const Login = () => {
       const {
         user: { providerData },
       } = data;
-      const action = login(providerData[0]);
-      console.log(providerData[0]);
-      dispatch(action);
-      localStorage.setItem("user", JSON.stringify(providerData[0]));
-      navigate("/");
+      fetch(
+        `https://guidiapi.azurewebsites.net/api/User/LoginByThirdParty?email=${providerData[0].email}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((response) => {
+          console.log(response);
+          const result = {
+            id: response.usr.id,
+            address: null,
+            email: response.usr.email,
+            fullName: null,
+            phone: null,
+          };
+          const action = login(result);
+          dispatch(action);
+          localStorage.setItem("user", JSON.stringify(result));
+          navigate("/");
+        })
+        .catch((err) => console.log(err));
     });
   };
 
   return (
-    <div>
-      <div className="login-content_container">
-        <div className="left_content">
-          <Link to="/">
-            <img className="left_content-logo" src={logo} alt="" />
-          </Link>
-          <p>
-            Tìm kiếm niềm vui và khám phá những điều mới lạ mà bạn <br />
-            chưa từng được trải nghiệm
+    <div className="login-content_container">
+      <div className="left_content">
+        <Link to="/">
+          <img className="left_content-logo" src={logo} alt="" />
+        </Link>
+        <p>
+          Tìm kiếm niềm vui và khám phá những điều mới lạ mà bạn <br />
+          chưa từng được trải nghiệm
+        </p>
+      </div>
+      <div className="right_content">
+        <h1>Đăng Nhập</h1>
+        {errMessage && (
+          <p style={{ textAlign: "center" }} className="auth__error">
+            Sai email hoặc mật khẩu
           </p>
-        </div>
-        <div className="right_content">
-          <h1>Đăng Nhập</h1>
-          {errMessage && (
-            <p style={{ textAlign: "center" }} className="auth__error">
-              Sai email hoặc mật khẩu
-            </p>
-          )}
+        )}
 
-          <div>
-            <form action="">
-              <input
-                className="right_content-input"
-                type="text"
-                placeholder="Địa chỉ Email"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-              <br />
-              <input
-                className="right_content-input"
-                type="password"
-                placeholder="Mật khẩu"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-              <br />
-              <button
-                onSubmit={handleLogin}
-                onClick={handleLogin}
-                className="right_content-login-button"
-              >
-                {loading ? <CircularProgress /> : "ĐĂNG NHẬP"}
-              </button>
-              <br />
-            </form>
+        <div>
+          <form action="">
+            <input
+              className="right_content-input"
+              type="text"
+              placeholder="Địa chỉ Email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
+            <br />
+            <input
+              className="right_content-input"
+              type="password"
+              placeholder="Mật khẩu"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+            <br />
+            <button
+              onSubmit={handleLogin}
+              onClick={handleLogin}
+              className="right_content-login-button"
+            >
+              {loading ? <CircularProgress /> : "ĐĂNG NHẬP"}
+            </button>
+            <br />
+          </form>
 
-            <div className="right_content-account">
-              <div>
-                <input type="checkbox" name="rememberCheckbox" />
-                <label
-                  htmlFor="rememberCheckbox"
-                  className="right_content-checkbox"
-                >
-                  Nhớ tài khoản
-                </label>
-              </div>
-              <a href="#" className="right_content-links">
-                Quên mật khẩu?
-              </a>
-            </div>
-            <p className="right_content-custom-dash">
-              ————————————————— Hoặc —————————————————
-            </p>
-            <div className="right_content-button">
-              <div className="button-container">
-                <button onClick={googleAuth}>
-                  <img src={googleIcon} alt="" className="icon-img" />
-                  Đăng nhập với Google
-                </button>
-                <button onClick={facebookAuth}>
-                  <img src={fbIcon} alt="" className="icon-img" />
-                  Đăng nhập với Facebook
-                </button>
-              </div>
-            </div>
+          <div className="right_content-account">
             <div>
-              {/* <a href="/register" className="right_content-links"></a> */}
-              <Link to="/register" className="right_content-links">
-                —————————————— Tạo tài khoản mới ——————————————
-              </Link>
-              <br />
-              <p className="right_content-text">
-                Bằng cách đăng ký hoặc đăng nhập bạn đã hiểu và đồng ý với
-                <br /> Điều khoản Sử Dụng và Chính Sách Bảo Mật cảu Guidi
-              </p>
+              <input type="checkbox" name="rememberCheckbox" />
+              <label
+                htmlFor="rememberCheckbox"
+                className="right_content-checkbox"
+              >
+                Nhớ tài khoản
+              </label>
             </div>
+            <a href="#" className="right_content-links">
+              Quên mật khẩu?
+            </a>
+          </div>
+          <p className="right_content-custom-dash">
+            ————————————————— Hoặc —————————————————
+          </p>
+          <div className="right_content-button">
+            <div className="button-container">
+              <button onClick={googleAuth}>
+                <img src={googleIcon} alt="" className="icon-img" />
+                Đăng nhập với Google
+              </button>
+              <button onClick={facebookAuth}>
+                <img src={fbIcon} alt="" className="icon-img" />
+                Đăng nhập với Facebook
+              </button>
+            </div>
+          </div>
+          <div>
+            {/* <a href="/register" className="right_content-links"></a> */}
+            <Link to="/register" className="right_content-links">
+              —————————————— Tạo tài khoản mới ——————————————
+            </Link>
+            <br />
+            <p className="right_content-text">
+              Bằng cách đăng ký hoặc đăng nhập bạn đã hiểu và đồng ý với
+              <br /> Điều khoản Sử Dụng và Chính Sách Bảo Mật cảu Guidi
+            </p>
           </div>
         </div>
       </div>

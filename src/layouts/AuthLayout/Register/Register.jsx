@@ -24,7 +24,6 @@ const SignupSchema = Yup.object().shape({
   address: Yup.string()
     .min(5, "Địa chỉ quá ngắn")
     .required("Vui lòng không để trống"),
-  username: Yup.string().required("Vui lòng không để trống"),
   fullname: Yup.string()
     .min(5, "Tên quá ngắn")
     .required("Vui lòng không để trống"),
@@ -39,7 +38,6 @@ const Register = () => {
   const naviagate = useNavigate();
   const formik = useFormik({
     initialValues: {
-      username: "",
       password: "",
       confirmPassword: "",
       fullname: "",
@@ -54,15 +52,7 @@ const Register = () => {
       // }
       console.log(values);
       setEmailExisted(false);
-      const data = {
-        Username: values.username,
-        Password: values.password,
-        ConfirmPassword: values.confirmPassword,
-        FullName: values.fullname,
-        Email: values.email,
-        Phone: values.phone,
-        Address: values.address,
-      };
+
       //?Username=${values.username}&Password=${values.password}&ConfirmPassword=${values.confirmPassword}&FullName=${values.fullname}&Email=${values.email}&Phone=${values.phone}&Address=${values.address}
       fetch(`https://guidiapi.azurewebsites.net/api/User/Register`, {
         method: "POST",
@@ -87,152 +77,134 @@ const Register = () => {
     },
   });
   return (
-    <div>
-      <div className="login-content_container">
-        <div className="left_content">
-          <Link to="/">
-            <img className="left_content-logo" src={logo} alt="" />
-          </Link>
-          <p>
-            Tìm kiếm niềm vui và khám phá những điều mới lạ mà bạn <br />
-            chưa từng được trải nghiệm
+    <div className="login-content_container">
+      <div className="left_content">
+        <Link to="/">
+          <img className="left_content-logo" src={logo} alt="" />
+        </Link>
+        <p>
+          Tìm kiếm niềm vui và khám phá những điều mới lạ mà bạn <br />
+          chưa từng được trải nghiệm
+        </p>
+      </div>
+      <div className="right_content">
+        <h1>Đăng kí</h1>
+        {emailExisted ? (
+          <p style={{ textAlign: "center" }} className="auth__error">
+            Email này đã được đăng kí
           </p>
-        </div>
-        <div className="right_content">
-          <h1>Đăng kí</h1>
-          {emailExisted ? (
-            <p style={{ textAlign: "center" }} className="auth__error">
-              Email này đã được đăng kí
-            </p>
-          ) : (
-            <></>
-          )}
+        ) : (
+          <></>
+        )}
+        <div>
+          <form onSubmit={formik.handleSubmit} action="">
+            <input
+              name="fullname"
+              value={formik.values.fullname}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="right_content-input"
+              type="text"
+              placeholder="Họ và tên"
+            />
+            {formik.errors.fullname && formik.touched.fullname ? (
+              <p className="auth__error">{formik.errors.fullname}</p>
+            ) : (
+              <br />
+            )}
+            <input
+              name="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="right_content-input"
+              type="text"
+              placeholder="Email"
+            />
+            {formik.errors.email && formik.touched.email ? (
+              <p className="auth__error">{formik.errors.email}</p>
+            ) : (
+              <br />
+            )}
+
+            <input
+              name="phone"
+              value={formik.values.phone}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="right_content-input"
+              type="text"
+              placeholder="Số điện thoại"
+            />
+            {formik.errors.phone && formik.touched.phone ? (
+              <p className="auth__error">{formik.errors.phone}</p>
+            ) : (
+              <br />
+            )}
+            <input
+              name="address"
+              value={formik.values.address}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="right_content-input"
+              type="text"
+              placeholder="Địa chỉ"
+            />
+            {formik.errors.address && formik.touched.address ? (
+              <p className="auth__error">{formik.errors.address}</p>
+            ) : (
+              <br />
+            )}
+
+            <input
+              name="password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="right_content-input"
+              type="password"
+              placeholder="Mật khẩu"
+            />
+            {formik.errors.password && formik.touched.password ? (
+              <p className="auth__error">{formik.errors.password}</p>
+            ) : (
+              <br />
+            )}
+
+            <input
+              name="confirmPassword"
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="right_content-input"
+              type="password"
+              placeholder="Xác nhận mật khẩu"
+            />
+            {formik.errors.confirmPassword && formik.touched.confirmPassword ? (
+              <p className="auth__error">{formik.errors.confirmPassword}</p>
+            ) : (
+              <br />
+            )}
+
+            <button
+              type="submit"
+              onClick={formik.submitForm}
+              className="right_content-login-button"
+            >
+              ĐĂNG KÍ
+            </button>
+            <br />
+          </form>
+
           <div>
-            <form onSubmit={formik.handleSubmit} action="">
-              <input
-                name="fullname"
-                value={formik.values.fullname}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="right_content-input"
-                type="text"
-                placeholder="Họ và tên"
-              />
-              {formik.errors.fullname && formik.touched.fullname ? (
-                <p className="auth__error">{formik.errors.fullname}</p>
-              ) : (
-                <br />
-              )}
-              <input
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="right_content-input"
-                type="text"
-                placeholder="Email"
-              />
-              {formik.errors.email && formik.touched.email ? (
-                <p className="auth__error">{formik.errors.email}</p>
-              ) : (
-                <br />
-              )}
-
-              <input
-                name="phone"
-                value={formik.values.phone}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="right_content-input"
-                type="text"
-                placeholder="Số điện thoại"
-              />
-              {formik.errors.phone && formik.touched.phone ? (
-                <p className="auth__error">{formik.errors.phone}</p>
-              ) : (
-                <br />
-              )}
-              <input
-                name="address"
-                value={formik.values.address}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="right_content-input"
-                type="text"
-                placeholder="Địa chỉ"
-              />
-              {formik.errors.address && formik.touched.address ? (
-                <p className="auth__error">{formik.errors.address}</p>
-              ) : (
-                <br />
-              )}
-
-              <input
-                name="username"
-                value={formik.values.username}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="right_content-input"
-                type="text"
-                placeholder="Tên đăng nhập"
-              />
-              {formik.errors.username && formik.touched.username ? (
-                <p className="auth__error">{formik.errors.username}</p>
-              ) : (
-                <br />
-              )}
-
-              <input
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="right_content-input"
-                type="password"
-                placeholder="Mật khẩu"
-              />
-              {formik.errors.password && formik.touched.password ? (
-                <p className="auth__error">{formik.errors.password}</p>
-              ) : (
-                <br />
-              )}
-
-              <input
-                name="confirmPassword"
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className="right_content-input"
-                type="password"
-                placeholder="Xác nhận mật khẩu"
-              />
-              {formik.errors.confirmPassword &&
-              formik.touched.confirmPassword ? (
-                <p className="auth__error">{formik.errors.confirmPassword}</p>
-              ) : (
-                <br />
-              )}
-
-              <button
-                type="submit"
-                onClick={formik.submitForm}
-                className="right_content-login-button"
-              >
-                ĐĂNG KÍ
-              </button>
-              <br />
-            </form>
-
-            <div>
-              <Link to="/login" className="right_content-links">
-                —————————————— Bạn đã có tài khoản ——————————————
-              </Link>
-              <br />
-              <p className="right_content-text">
-                Bằng cách đăng ký hoặc đăng nhập bạn đã hiểu và đồng ý với
-                <br /> Điều khoản Sử Dụng và Chính Sách Bảo Mật cảu Guidi
-              </p>
-            </div>
+            <Link to="/login" className="right_content-links">
+              —————————————— Bạn đã có tài khoản ——————————————
+            </Link>
+            <br />
+            <p className="right_content-text">
+              Bằng cách đăng ký hoặc đăng nhập bạn đã hiểu và đồng ý với
+              <br /> Điều khoản Sử Dụng và Chính Sách Bảo Mật cảu Guidi
+            </p>
           </div>
         </div>
       </div>

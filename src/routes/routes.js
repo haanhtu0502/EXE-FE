@@ -36,13 +36,11 @@ const publicRoutes = [
     path: "/profile",
     component: Profile,
     layout: DefaultLayout,
-    private: true,
   },
   {
     path: "/planlist",
     component: PlanList,
     layout: DefaultLayout,
-    private: true,
   },
 ];
 

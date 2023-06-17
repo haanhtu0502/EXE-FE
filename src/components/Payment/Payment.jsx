@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 const Payment = () => {
   const itenary = useSelector((state) => state.innetary.itenary);
+  const user = useSelector((state) => state.user.user);
   return (
     <div className="payment__container">
       <div className="payment__wrapper">
@@ -50,6 +51,7 @@ const Payment = () => {
             <div className="payment__contactInfo-wrapper">
               <p className="payment__contactInfo-label">Họ và Tên*:</p>
               <input
+                defaultValue={user.name ? user.name : ""}
                 className="payment__contactInfo-input"
                 type="text"
                 placeholder="Nguyen Van A"
@@ -58,6 +60,7 @@ const Payment = () => {
             <div className="payment__contactInfo-wrapper">
               <p className="payment__contactInfo-label">Địa chỉ*:</p>
               <input
+                defaultValue={user.address ? user.address : ""}
                 className="payment__contactInfo-input"
                 type="text"
                 placeholder="TP.HCM"
@@ -66,6 +69,7 @@ const Payment = () => {
             <div className="payment__contactInfo-wrapper">
               <p className="payment__contactInfo-label">SĐT*:</p>
               <input
+                defaultValue={user.phone ? user.phone : ""}
                 className="payment__contactInfo-input"
                 type="tel"
                 placeholder="0987654321"
@@ -74,6 +78,7 @@ const Payment = () => {
             <div className="payment__contactInfo-wrapper">
               <p className="payment__contactInfo-label">Email*:</p>
               <input
+                defaultValue={user.email ? user.email : ""}
                 className="payment__contactInfo-input"
                 type="email"
                 placeholder="abc@gmal.com"

@@ -38,7 +38,7 @@ const PlanItem = ({ plan, setPlans, userId }) => {
   const { open, vertical, horizontal, feature } = openSnackbar;
 
   const handleDelete = () => {
-    fetch(`https://guidi.azurewebsites.net/api/Itinerary/${plan.id}`, {
+    fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${plan.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -47,7 +47,7 @@ const PlanItem = ({ plan, setPlans, userId }) => {
       .then((res) => res.json())
       .then((response) => {
         console.log(response);
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/User/${userId}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/User/${userId}`)
           .then((res) => res.json())
           .then((response) => {
             console.log(response);

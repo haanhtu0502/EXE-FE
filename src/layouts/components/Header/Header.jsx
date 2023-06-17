@@ -20,14 +20,12 @@ const Header = () => {
   const headerMenu = [
     { display: "Đăng nhập", to: "/login" },
     { display: "Đăng ký", to: "/register" },
-    { display: "Trợ giúp", to: "/help" },
   ];
 
   const headerMenuLogined = [
     { display: "Trang cá nhân", to: "/profile" },
-    { display: "Kế hoạch", to: "/planlist" },
-    { display: "Chuyến đi", to: "/history" },
-    { display: "Trợ giúp", to: "/help" },
+    { display: "Chuyến đi", to: "/planlist" },
+
     { display: "Đăng xuất", to: "/" },
   ];
 
@@ -114,7 +112,9 @@ const Header = () => {
                       fontWeight: 600,
                     }}
                   >
-                    <Link to={item.to}>{item.display}</Link>{" "}
+                    <Link onClick={handleClose} to={item.to}>
+                      {item.display}
+                    </Link>{" "}
                   </MenuItem>
                 ))
               : headerMenuLogined.map((item) => {
@@ -136,7 +136,9 @@ const Header = () => {
                         fontWeight: 600,
                       }}
                     >
-                      <Link to={item.to}>{item.display}</Link>{" "}
+                      <Link onClick={handleClose} to={item.to}>
+                        {item.display}
+                      </Link>{" "}
                     </MenuItem>
                   );
                 })}
