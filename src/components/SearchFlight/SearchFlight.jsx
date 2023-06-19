@@ -1,7 +1,5 @@
 import { Autocomplete, TextField } from "@mui/material";
-import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
-import { DateRange } from "react-date-range";
 
 const SearchFlight = ({ loading, formik, location, setLoading }) => {
   const [brands, setBrands] = useState([]);
@@ -9,7 +7,7 @@ const SearchFlight = ({ loading, formik, location, setLoading }) => {
   useEffect(() => {
     const fetchFlightBrand = () => {
       setLoading(true);
-      fetch(`https://guidi.azurewebsites.net/api/Flight/BrandName`)
+      fetch(`https://guidiapi.azurewebsites.net/api/Flight/BrandName`)
         .then((res) => res.json())
         .then((response) => {
           setBrands([...response.result, "Tất cả"]);

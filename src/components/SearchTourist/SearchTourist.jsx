@@ -10,7 +10,7 @@ const SearchTourist = ({ formik, location, setLoading }) => {
       fetch(`https://guidiapi.azurewebsites.net/api/Preference`)
         .then((res) => res.json())
         .then((response) => {
-          setPreferences([...response.result, "Tất cả"]);
+          setPreferences([...response.result]);
           setLoading(false);
         })
         .catch((err) => console.log(err));
