@@ -14,12 +14,20 @@ import { format } from "date-fns";
 import dayjs from "dayjs";
 import MuiAlert from "@mui/material/Alert";
 import { Snackbar } from "@mui/material";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { addInnetary } from "../../feature/innetarySlice";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 const PlanItem = ({ plan, setPlans, userId }) => {
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  console.log(plan);
   const DatePlanned = {
     startDate: format(dayjs(plan.startDate).$d, "dd/MM/yyyy"),
     endDate: format(dayjs(plan.endDate).$d, "dd/MM/yyyy"),
@@ -57,6 +65,23 @@ const PlanItem = ({ plan, setPlans, userId }) => {
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleEdit = () => {
+    const editItenary = {
+      budget: plan.budget,
+      destinationId: plan.destinationId,
+      destinationName: plan.destinationName,
+      title: plan.title,
+      startDate: plan.startDate,
+      endDate: plan.endDate,
+      id: plan.id,
+      price: plan.price,
+    };
+    const action = addInnetary(editItenary);
+    dispatch(action);
+    localStorage.setItem("itenary", JSON.stringify(editItenary));
+    navigate(`/planner/plan`);
   };
 
   return (
@@ -124,7 +149,7 @@ const PlanItem = ({ plan, setPlans, userId }) => {
           />{" "}
           Xóa
         </button>
-        <button className="btn btn-edit">
+        <button onClick={handleEdit} className="btn btn-edit">
           <FontAwesomeIcon
             icon={faPenToSquare}
             size="lg"
