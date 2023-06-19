@@ -1,15 +1,17 @@
 import { Autocomplete, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-const SearchTourist = ({ formik, location }) => {
+const SearchTourist = ({ formik, location, setLoading }) => {
   const [preferences, setPreferences] = useState([]);
 
   useEffect(() => {
     const fetchPreferencesList = () => {
+      setLoading(true);
       fetch(`https://guidi.azurewebsites.net/api/Preference`)
         .then((res) => res.json())
         .then((response) => {
           setPreferences([...response.result, "Tất cả"]);
+          setLoading(false);
         })
         .catch((err) => console.log(err));
     };

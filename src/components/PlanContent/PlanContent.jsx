@@ -31,6 +31,7 @@ import SearchService from "../SearchService/SearchService";
 import SearchTourist from "../SearchTourist/SearchTourist";
 import { useParams } from "react-router";
 import ModalEditBudget from "../ModalEditBudget/ModalEditBudget";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -101,13 +102,11 @@ const PlanContent = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     const fetchItenaryInfo = () => {
       fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${id}`)
         .then((res) => res.json())
         .then((response) => {
           setPlanInfo(response.result);
-          setLoading(false);
         })
         .catch((err) => console.log(err));
     };
@@ -116,7 +115,6 @@ const PlanContent = () => {
         .then((res) => res.json())
         .then((response) => {
           setLocation(response.result);
-          setLoading(false);
         })
         .catch((err) => console.log(err));
     };
@@ -135,6 +133,7 @@ const PlanContent = () => {
       number: "",
     },
     onSubmit: (values) => {
+      setLoading(true);
       fetch(
         `https://guidiapi.azurewebsites.net/api/Flight?destinationtoid=${
           values.location.id
@@ -150,12 +149,13 @@ const PlanContent = () => {
       )
         .then((res) => res.json())
         .then((response) => {
-          console.log(response);
           if (response.errorMessage) {
             setFlightResult([]);
+            setLoading(false);
             return;
           }
           setFlightResult(response.result);
+          setLoading(false);
         })
         .catch((err) => console.log(err));
     },
@@ -170,18 +170,19 @@ const PlanContent = () => {
       maxPrice: budget,
     },
     onSubmit: (values) => {
-      console.log(values);
+      setLoading(true);
       fetch(
         `https://guidiapi.azurewebsites.net/api/Hotel?locationid=${values.location.id}&rating=${values.rating.value}&roomType=${values.roomType.value}&minPrice=${values.minPrice}&maxPrice=${values.maxPrice}`
       )
         .then((res) => res.json())
         .then((response) => {
-          console.log(response);
           if (response.errorMessage) {
             setHotelResult([]);
+            setLoading(false);
             return;
           }
           setHotelResult(response.result);
+          setLoading(false);
         })
         .catch((err) => console.log(err));
     },
@@ -194,6 +195,7 @@ const PlanContent = () => {
       maxPrice: budget,
     },
     onSubmit: (values) => {
+      setLoading(true);
       fetch(
         `https://guidiapi.azurewebsites.net/api/Service?locationId=${
           values.location.id
@@ -203,12 +205,13 @@ const PlanContent = () => {
       )
         .then((res) => res.json())
         .then((response) => {
-          console.log(response);
           if (response.errorMessage) {
             setServiceResult([]);
+            setLoading(false);
             return;
           }
           setServiceResult(response.result);
+          setLoading(false);
         })
         .catch((err) => console.log(err));
     },
@@ -222,6 +225,7 @@ const PlanContent = () => {
       maxPrice: budget,
     },
     onSubmit: (values) => {
+      setLoading(true);
       fetch(
         `https://guidiapi.azurewebsites.net/api/TouristSpot?locationId=${
           values.location.id
@@ -235,12 +239,13 @@ const PlanContent = () => {
       )
         .then((res) => res.json())
         .then((response) => {
-          console.log(response);
           if (response.errorMessage) {
             setTouristResult([]);
+            setLoading(false);
             return;
           }
           setTouristResult(response.result);
+          setLoading(false);
         })
         .catch((err) => console.log(err));
       console.log(values);
@@ -252,6 +257,7 @@ const PlanContent = () => {
       switch (type) {
         case "flight":
           const fetchFlights = () => {
+            setLoading(true);
             fetch(
               `https://guidiapi.azurewebsites.net/api/Flight?destinationtoid=${
                 flightFormik.values.location.id
@@ -281,9 +287,11 @@ const PlanContent = () => {
               .then((response) => {
                 if (response.errorMessage) {
                   setFlightResult([]);
+                  setLoading(false);
                   return;
                 }
                 setFlightResult(response.result);
+                setLoading(false);
               })
               .catch((err) => console.log(err));
           };
@@ -291,6 +299,7 @@ const PlanContent = () => {
           break;
         case "hotel":
           const fetchHotels = () => {
+            setLoading(true);
             fetch(
               `https://guidiapi.azurewebsites.net/api/Hotel?locationid=${hotelFormik.values.location.id}&rating=${hotelFormik.values.rating.value}&roomType=${hotelFormik.values.roomType.value}&minPrice=${hotelFormik.values.minPrice}&maxPrice=${hotelFormik.values.maxPrice}`
             )
@@ -298,9 +307,11 @@ const PlanContent = () => {
               .then((response) => {
                 if (response.errorMessage) {
                   setHotelResult([]);
+                  setLoading(false);
                   return;
                 }
                 setHotelResult(response.result);
+                setLoading(false);
               })
               .catch((err) => console.log(err));
           };
@@ -308,6 +319,7 @@ const PlanContent = () => {
           break;
         case "service":
           const fetchServices = () => {
+            setLoading(true);
             fetch(
               `https://guidiapi.azurewebsites.net/api/Service?locationId=${
                 serviceFormik.values.location.id
@@ -323,8 +335,13 @@ const PlanContent = () => {
             )
               .then((res) => res.json())
               .then((response) => {
-                console.log(response);
+                if (response.errorMessage) {
+                  setServiceResult([]);
+                  setLoading(false);
+                  return;
+                }
                 setServiceResult(response.result);
+                setLoading(false);
               })
               .catch((err) => console.log(err));
           };
@@ -332,6 +349,7 @@ const PlanContent = () => {
           break;
         case "tourist":
           const fetchTouristSpot = () => {
+            setLoading(true);
             fetch(
               `https://guidiapi.azurewebsites.net/api/TouristSpot?locationId=${
                 touristFormik.values.location.id
@@ -351,8 +369,13 @@ const PlanContent = () => {
             )
               .then((res) => res.json())
               .then((response) => {
-                console.log(response);
+                if (response.errorMessage) {
+                  setTouristResult([]);
+                  setLoading(false);
+                  return;
+                }
                 setTouristResult(response.result);
+                setLoading(false);
               })
               .catch((err) => console.log(err));
           };
@@ -411,6 +434,7 @@ const PlanContent = () => {
           <div className="content__search">
             {type === "flight" ? (
               <SearchFlight
+                setLoading={setLoading}
                 loading={loading}
                 formik={flightFormik}
                 location={location}
@@ -431,7 +455,11 @@ const PlanContent = () => {
               <></>
             )}
             {type === "tourist" ? (
-              <SearchTourist formik={touristFormik} location={location} />
+              <SearchTourist
+                setLoading={setLoading}
+                formik={touristFormik}
+                location={location}
+              />
             ) : (
               <></>
             )}
@@ -444,6 +472,7 @@ const PlanContent = () => {
         <div className="content__flex-right">
           {type === "flight" ? (
             <Flight
+              setLoading={setLoading}
               setOpenBudgetModal={setOpenBudgetModal}
               result={flightResult}
               openSnackbar={openSnackbar}
@@ -457,6 +486,7 @@ const PlanContent = () => {
           )}
           {type === "hotel" ? (
             <Hotel
+              setLoading={setLoading}
               setOpenBudgetModal={setOpenBudgetModal}
               result={hotelResult}
               openSnackbar={openSnackbar}
@@ -470,6 +500,7 @@ const PlanContent = () => {
           )}
           {type === "tourist" ? (
             <TouristSpot
+              setLoading={setLoading}
               planId={id}
               planInfo={planInfo}
               setPlanInfo={setPlanInfo}
@@ -482,6 +513,7 @@ const PlanContent = () => {
           )}
           {type === "service" ? (
             <Service
+              setLoading={setLoading}
               planId={id}
               planInfo={planInfo}
               setPlanInfo={setPlanInfo}
@@ -564,6 +596,8 @@ const PlanContent = () => {
           Cập nhật thành công
         </Alert>
       </Snackbar>
+
+      {loading && <LoadingScreen />}
     </div>
   );
 };

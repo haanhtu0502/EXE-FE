@@ -7,28 +7,30 @@ import { faClipboardList } from "@fortawesome/free-solid-svg-icons";
 import { fetchUser } from "../../utils/fetchLocalStorage";
 import { Navigate } from "react-router";
 import { useSelector } from "react-redux";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const PlanList = () => {
   const [plans, setPlans] = useState([]);
 
   const userInfo = useSelector((state) => state.user.user);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchAllItinerary = () => {
       if (userInfo) {
+        setLoading(true);
         fetch(
           `https://guidiapi.azurewebsites.net/api/Itinerary/User/${userInfo.id}`
         )
           .then((res) => res.json())
           .then((response) => {
             setPlans([...response.result]);
+            setLoading(false);
           })
           .catch((err) => console.log(err));
       }
     };
     fetchAllItinerary();
   }, []);
-
-  console.log(userInfo);
 
   return (
     <>
@@ -68,6 +70,8 @@ const PlanList = () => {
           )}
         </div>
       )}
+
+      {loading && <LoadingScreen />}
     </>
   );
 };

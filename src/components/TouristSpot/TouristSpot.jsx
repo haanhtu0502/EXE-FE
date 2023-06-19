@@ -25,6 +25,7 @@ const TouristSpot = ({
   planId,
   planInfo,
   setPlanInfo,
+  setLoading,
 }) => {
   const dispatch = useDispatch();
 
@@ -46,6 +47,8 @@ const TouristSpot = ({
       spotId: spotId,
     };
 
+    setLoading(true);
+
     fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/TouristSpot`, {
       method: "POST",
       headers: {
@@ -55,9 +58,9 @@ const TouristSpot = ({
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log(response);
         if (response.errorMessage) {
           setOpenWarningSnackbar({ ...openWarningSnackbar, open: true });
+          setLoading(false);
           return;
         }
         fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
@@ -69,7 +72,7 @@ const TouristSpot = ({
             localStorage.setItem("itenary", JSON.stringify(itenary));
             const action = updateInnetary();
             dispatch(action);
-            // setLoading(false);
+            setLoading(false);
             setOpenSnackbar({ ...openSnackbar, open: true });
           })
           .catch((err) => console.log(err));
@@ -161,7 +164,7 @@ const TouristSpot = ({
             alignItem: "center",
           }}
         >
-          Du lịch này đã có trong lịch trình rồi
+          Địa điểm này đã có trong lịch trình rồi
         </Alert>
       </Snackbar>
     </div>

@@ -17,7 +17,7 @@ import { Snackbar } from "@mui/material";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-const InnetaryHotel = ({ item, planInfo, setPlanInfo }) => {
+const InnetaryHotel = ({ item, planInfo, setPlanInfo, setLoading }) => {
   console.log(planInfo);
   const [dates, setDates] = useState([
     {
@@ -44,7 +44,7 @@ const InnetaryHotel = ({ item, planInfo, setPlanInfo }) => {
   };
 
   const handleDelete = () => {
-    setOpenSnackbar({ ...openSnackbar, open: true, feature: "Xóa" });
+    setLoading(true);
     fetch(
       `https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}/Hotel`,
       {
@@ -66,8 +66,8 @@ const InnetaryHotel = ({ item, planInfo, setPlanInfo }) => {
             localStorage.setItem("itenary", JSON.stringify(itenary));
             const action = updateInnetary();
             dispatch(action);
-
-            // setLoading(false);
+            setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true, feature: "Xóa" });
           })
           .catch((err) => console.log(err));
       })

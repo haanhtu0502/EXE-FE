@@ -22,7 +22,13 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
+const InnetaryService = ({
+  setPlanInfo,
+  planInfo,
+  item,
+  plannedService,
+  setLoading,
+}) => {
   const [date, setDate] = useState(
     plannedService.date ? dayjs(plannedService.date).$d : null
   );
@@ -70,8 +76,6 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
   };
 
   const handleSave = () => {
-    setOpenSnackbar({ ...openSnackbar, open: true, feature: "lưu" });
-
     if (!date || !startTime || !endTime) {
       setOpenErrorSnackbar({
         ...openSnackbar,
@@ -90,6 +94,8 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
       });
       return;
     }
+
+    setLoading(true);
 
     const DateTimeFormated = {
       date: format(date, "yyyy-MM-dd"),
@@ -124,7 +130,8 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
             const action = updateInnetary();
             dispatch(action);
 
-            // setLoading(false);
+            setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true, feature: "lưu" });
           })
           .catch((err) => console.log(err));
       })
@@ -132,7 +139,7 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
   };
 
   const handleDelete = () => {
-    setOpenSnackbar({ ...openSnackbar, open: true, feature: "xóa" });
+    setLoading(true);
     fetch(
       `https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}/Service/${item.id}`,
       {
@@ -154,7 +161,8 @@ const InnetaryService = ({ setPlanInfo, planInfo, item, plannedService }) => {
             const action = updateInnetary();
             dispatch(action);
 
-            // setLoading(false);
+            setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true, feature: "xóa" });
           })
           .catch((err) => console.log(err));
       })

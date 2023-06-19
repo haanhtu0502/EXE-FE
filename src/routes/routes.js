@@ -8,6 +8,7 @@ import PlanContent from "../components/PlanContent/PlanContent";
 import Payment from "../components/Payment/Payment";
 import Profile from "../components/Profile/Profile";
 import PlanList from "../components/ListPlan/PlanList";
+import Qrpayment from "../components/QrPayment/Qrpayment";
 
 const publicRoutes = [
   {
@@ -29,6 +30,12 @@ const publicRoutes = [
   {
     path: "/payment",
     component: Payment,
+    layout: DefaultLayout,
+    private: true,
+  },
+  {
+    path: "/qrpayment",
+    component: Qrpayment,
     layout: DefaultLayout,
     private: true,
   },

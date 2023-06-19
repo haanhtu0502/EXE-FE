@@ -3,15 +3,17 @@ import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { DateRange } from "react-date-range";
 
-const SearchFlight = ({ loading, formik, location }) => {
+const SearchFlight = ({ loading, formik, location, setLoading }) => {
   const [brands, setBrands] = useState([]);
 
   useEffect(() => {
     const fetchFlightBrand = () => {
+      setLoading(true);
       fetch(`https://guidi.azurewebsites.net/api/Flight/BrandName`)
         .then((res) => res.json())
         .then((response) => {
           setBrands([...response.result, "Tất cả"]);
+          setLoading(false);
         })
         .catch((err) => console.log(err));
     };

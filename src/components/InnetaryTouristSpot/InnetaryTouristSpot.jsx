@@ -24,7 +24,13 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
+const InnetaryTouristSpot = ({
+  setPlanInfo,
+  planInfo,
+  item,
+  plannedSpot,
+  setLoading,
+}) => {
   const [date, setDate] = useState(
     plannedSpot.date ? dayjs(plannedSpot.date).$d : null
   );
@@ -72,8 +78,6 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
   };
 
   const handleSave = () => {
-    setOpenSnackbar({ ...openSnackbar, open: true, feature: "lưu" });
-
     if (!date || !startTime || !endTime) {
       setOpenErrorSnackbar({
         ...openSnackbar,
@@ -101,6 +105,8 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
       endTime: format(endTime, "HH:mm:ss"),
     };
 
+    setLoading(true);
+
     fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/TouristSpot`, {
       method: "PUT",
       headers: {
@@ -119,8 +125,8 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
             localStorage.setItem("itenary", JSON.stringify(itenary));
             const action = updateInnetary();
             dispatch(action);
-
-            // setLoading(false);
+            setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true, feature: "lưu" });
           })
           .catch((err) => console.log(err));
       })
@@ -128,7 +134,7 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
   };
 
   const handleDelete = () => {
-    setOpenSnackbar({ ...openSnackbar, open: true, feature: "xóa" });
+    setLoading(true);
     fetch(
       `https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}/TouristSpot/${item.id}`,
       {
@@ -150,7 +156,8 @@ const InnetaryTouristSpot = ({ setPlanInfo, planInfo, item, plannedSpot }) => {
             const action = updateInnetary();
             dispatch(action);
 
-            // setLoading(false);
+            setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true, feature: "xóa" });
           })
           .catch((err) => console.log(err));
       })

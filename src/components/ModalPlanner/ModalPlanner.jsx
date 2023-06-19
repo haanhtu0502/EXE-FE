@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./ModalPlanner.scss";
 import InnetaryFlight from "../InnetaryFlight/InnetaryFlight";
 import InnetaryHotel from "../InnetaryHotel/InnetaryHotel";
@@ -6,9 +6,12 @@ import Empty from "../../assets/search-empty.png";
 import { useNavigate } from "react-router";
 import InnetaryService from "../InnetaryService/InnetaryService";
 import InnetaryTouristSpot from "../InnetaryTouristSpot/InnetaryTouristSpot";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const ModalPlanner = ({ handleClose, planInfo, setPlanInfo }) => {
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
   return (
     <div className="innetay__container">
       <h1 className="innetary__name">{planInfo.title}</h1>
@@ -20,6 +23,7 @@ const ModalPlanner = ({ handleClose, planInfo, setPlanInfo }) => {
         </div>
       ) : (
         <InnetaryFlight
+          setLoading={setLoading}
           setPlanInfo={setPlanInfo}
           planInfo={planInfo}
           item={planInfo.flight}
@@ -33,6 +37,7 @@ const ModalPlanner = ({ handleClose, planInfo, setPlanInfo }) => {
         </div>
       ) : (
         <InnetaryHotel
+          setLoading={setLoading}
           setPlanInfo={setPlanInfo}
           planInfo={planInfo}
           item={planInfo.hotel}
@@ -47,6 +52,7 @@ const ModalPlanner = ({ handleClose, planInfo, setPlanInfo }) => {
       ) : (
         planInfo.plannedServices.map((item) => (
           <InnetaryService
+            setLoading={setLoading}
             setPlanInfo={setPlanInfo}
             planInfo={planInfo}
             item={item.service}
@@ -63,6 +69,7 @@ const ModalPlanner = ({ handleClose, planInfo, setPlanInfo }) => {
       ) : (
         planInfo.plannedSpots.map((item) => (
           <InnetaryTouristSpot
+            setLoading={setLoading}
             setPlanInfo={setPlanInfo}
             planInfo={planInfo}
             item={item.spot}
@@ -83,6 +90,7 @@ const ModalPlanner = ({ handleClose, planInfo, setPlanInfo }) => {
           Thanh toán
         </button>
       </div>
+      {loading && <LoadingScreen />}
     </div>
   );
 };

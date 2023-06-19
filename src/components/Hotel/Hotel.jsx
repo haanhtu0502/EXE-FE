@@ -24,6 +24,7 @@ const Hotel = ({
   planInfo,
   setPlanInfo,
   setOpenBudgetModal,
+  setLoading,
 }) => {
   const dispatch = useDispatch();
 
@@ -48,6 +49,7 @@ const Hotel = ({
       setOpenWarningSnackbar({ ...openSnackbar, open: true });
       return;
     }
+    setLoading(true);
     fetch(
       `https://guidiapi.azurewebsites.net/api/Itinerary/${planId}/Hotel/${hotelId}`,
       {
@@ -69,12 +71,12 @@ const Hotel = ({
             localStorage.setItem("itenary", JSON.stringify(itenary));
             const action = updateInnetary();
             dispatch(action);
-            // setLoading(false);
+            setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true });
           })
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
-    setOpenSnackbar({ ...openSnackbar, open: true });
   };
   return (
     <div className="hotel__container">

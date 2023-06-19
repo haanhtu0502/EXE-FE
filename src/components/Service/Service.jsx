@@ -23,6 +23,7 @@ const Service = ({
   planId,
   planInfo,
   setPlanInfo,
+  setLoading,
 }) => {
   const dispatch = useDispatch();
 
@@ -43,6 +44,7 @@ const Service = ({
       serviceId: serviceId,
     };
 
+    setLoading(true);
     fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/Service`, {
       method: "POST",
       headers: {
@@ -52,9 +54,9 @@ const Service = ({
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log(response);
         if (response.errorMessage) {
           setOpenWarningSnackbar({ ...openWarningSnackbar, open: true });
+          setLoading(false);
           return;
         }
         fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
@@ -66,7 +68,7 @@ const Service = ({
             localStorage.setItem("itenary", JSON.stringify(itenary));
             const action = updateInnetary();
             dispatch(action);
-            // setLoading(false);
+            setLoading(false);
             setOpenSnackbar({ ...openSnackbar, open: true });
           })
           .catch((err) => console.log(err));

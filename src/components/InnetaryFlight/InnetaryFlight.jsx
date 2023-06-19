@@ -13,7 +13,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const InnetaryFlight = ({ item, planInfo, setPlanInfo }) => {
+const InnetaryFlight = ({ item, planInfo, setPlanInfo, setLoading }) => {
   const dispatch = useDispatch();
 
   const [openSnackbar, setOpenSnackbar] = useState({
@@ -29,7 +29,7 @@ const InnetaryFlight = ({ item, planInfo, setPlanInfo }) => {
   };
 
   const handleDelete = () => {
-    setOpenSnackbar({ ...openSnackbar, open: true });
+    setLoading(true);
     fetch(
       `https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}/Flight`,
       {
@@ -44,15 +44,14 @@ const InnetaryFlight = ({ item, planInfo, setPlanInfo }) => {
         fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
-            console.log(response);
             setPlanInfo(response.result);
             let itenary = JSON.parse(localStorage.getItem("itenary"));
             itenary = { ...itenary, price: response.result.price };
             localStorage.setItem("itenary", JSON.stringify(itenary));
             const action = updateInnetary();
             dispatch(action);
-
-            // setLoading(false);
+            setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true });
           })
           .catch((err) => console.log(err));
       })

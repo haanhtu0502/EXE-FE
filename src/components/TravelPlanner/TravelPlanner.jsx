@@ -31,6 +31,7 @@ import {
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { addInnetary } from "../../feature/innetarySlice";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const TravelPlanner = () => {
   const [dates, setDates] = useState([
@@ -42,7 +43,7 @@ const TravelPlanner = () => {
   ]);
 
   const [openDialog, setOpenDialog] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [errDate, setErrDate] = useState("");
   const [errBudget, setErrBudget] = useState("");
 
@@ -92,6 +93,7 @@ const TravelPlanner = () => {
         budget: values.budget,
       };
 
+      setLoading(true);
       fetch("https://guidiapi.azurewebsites.net/api/Itinerary", {
         method: "POST",
         headers: {
@@ -102,7 +104,6 @@ const TravelPlanner = () => {
       })
         .then((res) => res.json())
         .then((response) => {
-          console.log(response);
           const itenary = {
             budget: values.budget,
             destinationId: response.result.destinationId,
@@ -116,6 +117,7 @@ const TravelPlanner = () => {
           const action = addInnetary(itenary);
           dispatch(action);
           localStorage.setItem("itenary", JSON.stringify(itenary));
+          setLoading(false);
           navigate(`/planner/plan`);
         })
         .catch((err) => console.log(err));
@@ -125,6 +127,7 @@ const TravelPlanner = () => {
   const [location, setLocation] = useState([]);
 
   useEffect(() => {
+    setLoading(true);
     fetch("https://guidiapi.azurewebsites.net/api/Location")
       .then((res) => res.json())
       .then((data) => {
@@ -355,6 +358,7 @@ const TravelPlanner = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      {loading && <LoadingScreen />}
     </>
   );
 };
