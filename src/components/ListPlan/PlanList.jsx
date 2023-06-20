@@ -59,6 +59,7 @@ const PlanList = () => {
                 <div className="playList__content">
                   <div className="playList__item">
                     <PlanItem
+                      setLoading={setLoading}
                       plan={plan}
                       setPlans={setPlans}
                       userId={userInfo.id}
@@ -70,8 +71,6 @@ const PlanList = () => {
           )}
         </div>
       )}
-
-      {loading && <LoadingScreen />}
     </>
   );
 };

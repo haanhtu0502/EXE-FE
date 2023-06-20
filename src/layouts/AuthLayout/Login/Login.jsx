@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../../feature/userSlice";
 import { useNavigate } from "react-router";
 import { CircularProgress } from "@mui/material";
+import LoadingScreen from "../../../components/LoadingScreen/LoadingScreen";
 
 const Login = () => {
   const [user, setUser] = useState("");
@@ -35,6 +36,7 @@ const Login = () => {
         const {
           user: { providerData },
         } = data;
+        setLoading(true);
         fetch(
           `https://guidiapi.azurewebsites.net/api/User/LoginByThirdParty?email=${providerData[0].email}`,
           {
@@ -48,15 +50,21 @@ const Login = () => {
           .then((response) => {
             console.log(response);
             const result = {
-              id: response.usr.id,
-              address: null,
-              email: response.usr.email,
-              fullName: null,
-              phone: null,
+              id: response.result.id,
+              address: response.result.address,
+              email: response.result.email,
+              fullName: response.result.fullName.includes("NewGoogleUser")
+                ? null
+                : response.result.fullName,
+              phone:
+                response.result.phone === "0000000000"
+                  ? null
+                  : response.result.phone,
             };
             const action = login(result);
             dispatch(action);
             localStorage.setItem("user", JSON.stringify(result));
+            setLoading(false);
             navigate("/");
           })
           .catch((err) => console.log(err));
@@ -122,9 +130,9 @@ const Login = () => {
         .then((response) => {
           console.log(response);
           const result = {
-            id: response.usr.id,
+            id: response.result.id,
             address: null,
-            email: response.usr.email,
+            email: response.result.email,
             fullName: null,
             phone: null,
           };
@@ -181,7 +189,7 @@ const Login = () => {
               onClick={handleLogin}
               className="right_content-login-button"
             >
-              {loading ? <CircularProgress /> : "ĐĂNG NHẬP"}
+              Đăng nhập
             </button>
             <br />
           </form>
@@ -209,10 +217,10 @@ const Login = () => {
                 <img src={googleIcon} alt="" className="icon-img" />
                 Đăng nhập với Google
               </button>
-              <button onClick={facebookAuth}>
+              {/* <button onClick={facebookAuth}>
                 <img src={fbIcon} alt="" className="icon-img" />
                 Đăng nhập với Facebook
-              </button>
+              </button> */}
             </div>
           </div>
           <div>
@@ -228,6 +236,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      {loading && <LoadingScreen />}
     </div>
   );
 };

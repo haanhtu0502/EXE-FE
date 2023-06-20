@@ -22,12 +22,11 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const PlanItem = ({ plan, setPlans, userId }) => {
+const PlanItem = ({ plan, setPlans, userId, setLoading }) => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  console.log(plan);
   const DatePlanned = {
     startDate: format(dayjs(plan.startDate).$d, "dd/MM/yyyy"),
     endDate: format(dayjs(plan.endDate).$d, "dd/MM/yyyy"),
@@ -46,6 +45,7 @@ const PlanItem = ({ plan, setPlans, userId }) => {
   const { open, vertical, horizontal, feature } = openSnackbar;
 
   const handleDelete = () => {
+    setLoading(true);
     fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${plan.id}`, {
       method: "DELETE",
       headers: {
@@ -54,12 +54,12 @@ const PlanItem = ({ plan, setPlans, userId }) => {
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log(response);
         fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/User/${userId}`)
           .then((res) => res.json())
           .then((response) => {
             console.log(response);
             setPlans([...response.result]);
+            setLoading(false);
             setOpenSnackbar({ ...openSnackbar, open: true, feature: "xóa" });
           })
           .catch((err) => console.log(err));

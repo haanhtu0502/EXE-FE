@@ -4,6 +4,13 @@ import logo from "../../../assets/logo.png";
 import { useFormik } from "formik";
 import "./Register.scss";
 import * as Yup from "yup";
+import MuiAlert from "@mui/material/Alert";
+import { Snackbar } from "@mui/material";
+import LoadingScreen from "../../../components/LoadingScreen/LoadingScreen";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const SignupSchema = Yup.object().shape({
   password: Yup.string()
@@ -15,8 +22,8 @@ const SignupSchema = Yup.object().shape({
       /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
       "Số điện thoại không hợp lệ"
     )
-    .min(10, "Số điện thoại phải đủ 10 số")
-    .max(10, "Số điện thoại phải đủ 10 số")
+    .min(9, "Số điện thoại không hợp lệ")
+    .max(11, "Số điện thoại không hợp lệ")
     .required("Vui lòng không để trống"),
   email: Yup.string()
     .email("Email không hợp lệ")
@@ -27,6 +34,7 @@ const SignupSchema = Yup.object().shape({
   fullname: Yup.string()
     .min(5, "Tên quá ngắn")
     .required("Vui lòng không để trống"),
+  // username: Yup.string().min(5, "Tên quá ngắn"),
   confirmPassword: Yup.string()
     .required("Vui lòng không để trống")
     .oneOf([Yup.ref("password"), null], "Mật khẩu xác minh sai"),
@@ -35,25 +43,36 @@ const SignupSchema = Yup.object().shape({
 const Register = () => {
   const [emailExisted, setEmailExisted] = useState(false);
 
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+  });
+
+  const { open, vertical, horizontal } = openSnackbar;
+
+  const [loading, setLoading] = useState(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({ ...openSnackbar, open: false });
+  };
+
   const naviagate = useNavigate();
   const formik = useFormik({
     initialValues: {
       password: "",
       confirmPassword: "",
       fullname: "",
+      // username: "",
       email: "",
       phone: "",
       address: "",
     },
     validationSchema: SignupSchema,
     onSubmit: (values) => {
-      // if (values.confirmPassword !== values.password) {
-      //   return;
-      // }
-      console.log(values);
       setEmailExisted(false);
-
-      //?Username=${values.username}&Password=${values.password}&ConfirmPassword=${values.confirmPassword}&FullName=${values.fullname}&Email=${values.email}&Phone=${values.phone}&Address=${values.address}
+      console.log(values);
+      setLoading(true);
       fetch(`https://guidiapi.azurewebsites.net/api/User/Register`, {
         method: "POST",
         headers: {
@@ -66,9 +85,12 @@ const Register = () => {
           console.log(response);
           if (response.errorMessage) {
             setEmailExisted(true);
+            setLoading(false);
             return;
           }
           if (response.message) {
+            setLoading(false);
+            setOpenSnackbar({ ...openSnackbar, open: true });
             naviagate("/login");
             return;
           }
@@ -156,6 +178,21 @@ const Register = () => {
               <br />
             )}
 
+            {/* <input
+              name="username"
+              value={formik.values.username}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="right_content-input"
+              type="text"
+              placeholder="Tên đăng nhập"
+            />
+            {formik.errors.username && formik.touched.username ? (
+              <p className="auth__error">{formik.errors.username}</p>
+            ) : (
+              <br />
+            )} */}
+
             <input
               name="password"
               value={formik.values.password}
@@ -186,11 +223,7 @@ const Register = () => {
               <br />
             )}
 
-            <button
-              type="submit"
-              onClick={formik.submitForm}
-              className="right_content-login-button"
-            >
+            <button type="submit" className="right_content-login-button">
               ĐĂNG KÍ
             </button>
             <br />
@@ -208,6 +241,25 @@ const Register = () => {
           </div>
         </div>
       </div>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical, horizontal }}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{
+            width: "100%",
+            fontSize: "15px",
+            alignItem: "center",
+          }}
+        >
+          Đăng kí thành công
+        </Alert>
+      </Snackbar>
+      {loading && <LoadingScreen />}
     </div>
   );
 };
