@@ -24,7 +24,8 @@ const ModalEditBudget = ({
     //   setError(true);
     //   return;
     // }
-    fetch(`https://guidi.azurewebsites.net/api/Itinerary`, {
+    console.log("abc");
+    fetch(`https://guidiapi.azurewebsites.net/api/Itinerary`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +40,7 @@ const ModalEditBudget = ({
     })
       .then((res) => res.json())
       .then((response) => {
-        fetch(`https://guidi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
+        fetch(`https://guidiapi.azurewebsites.net/api/Itinerary/${planInfo.id}`)
           .then((res) => res.json())
           .then((response) => {
             setPlanInfo(response.result);

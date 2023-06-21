@@ -4,9 +4,12 @@
   max-width: 1200px;
   font-size: 18px;
   margin-bottom: 4rem;
+  border-radius: 10px;
 
   .planItem__header {
-    background-color: black;
+    background-color: #2522ca;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
     height: 4.5rem;
     display: flex;
     align-items: center;

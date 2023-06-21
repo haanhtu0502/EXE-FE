@@ -7,6 +7,7 @@ const Payment = () => {
   const itenary = useSelector((state) => state.innetary.itenary);
   const user = useSelector((state) => state.user.user);
   const navigate = useNavigate();
+  console.log(user);
   return (
     <div className="payment__container">
       <div className="payment__wrapper">
@@ -57,7 +58,7 @@ const Payment = () => {
                 <p className="payment__contactInfo-label">Họ và Tên*:</p>
                 <input
                   required
-                  defaultValue={user.name ? user.name : ""}
+                  defaultValue={user.fullName ? user.fullName : ""}
                   className="payment__contactInfo-input"
                   type="text"
                   placeholder="Nguyen Van A"
@@ -95,7 +96,7 @@ const Payment = () => {
             </div>
             <p>
               Tôi đã hiểu và đồng ý với điều khoản sử dụng chung và chính sách
-              quyền riêng tư của klook.
+              quyền riêng tư của Guidi.
             </p>
             <div className="payment__noticed">
               Vui lòng điền thông tin chính xác. Một khi đã gửi thông tin bạn sẽ
